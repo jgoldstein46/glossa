@@ -22,6 +22,7 @@ export interface Module {
   description: string;
   topic: string;
   difficulty: Difficulty;
+  language: string;
   estimated_duration_mins: number;
   thumbnail_url: string | null;
   is_published: boolean;

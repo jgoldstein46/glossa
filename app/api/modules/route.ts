@@ -51,12 +51,16 @@ export async function POST(request: NextRequest) {
     const supabase = await createSupabaseServerClient()
     const body = await request.json()
 
-    const { title } = body
+    const { title, language } = body
     if (!title || typeof title !== 'string' || title.trim().length === 0) {
       return apiError('Missing required field: title', 400)
     }
 
-    const result = await generateModule(supabase, title.trim())
+    const moduleLanguage = typeof language === 'string' && language.trim().length > 0
+      ? language.trim()
+      : 'English'
+
+    const result = await generateModule(supabase, title.trim(), moduleLanguage)
 
     if (!result.success) {
       return apiError(result.error, 500, result.details)

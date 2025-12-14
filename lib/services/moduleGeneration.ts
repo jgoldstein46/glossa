@@ -22,7 +22,7 @@ interface GenerationError {
 
 export type ModuleGenerationResult = GenerationSuccess | GenerationError
 
-async function generateModuleContent(title: string): Promise<GeneratedModule> {
+async function generateModuleContent(title: string, language: string): Promise<GeneratedModule> {
   const response = await openai.chat.completions.create({
     model: MODEL_ID,
     messages: [
@@ -32,7 +32,7 @@ async function generateModuleContent(title: string): Promise<GeneratedModule> {
       },
       {
         role: 'user',
-        content: `Create a learning module titled: "${title}"`,
+        content: `Create a learning module titled: "${title}"\n\nIMPORTANT: Generate ALL content (description, section titles, section content, quiz questions, and quiz options) in ${language}.`,
       },
     ],
     response_format: moduleGenerationSchema,
@@ -48,11 +48,12 @@ async function generateModuleContent(title: string): Promise<GeneratedModule> {
 
 export async function generateModule(
   supabase: SupabaseClient,
-  title: string
+  title: string,
+  language: string = 'English'
 ): Promise<ModuleGenerationResult> {
   try {
     // Step 1: Generate content via LLM
-    const generated = await generateModuleContent(title)
+    const generated = await generateModuleContent(title, language)
 
     // Step 2: Create module in database
     const { data: module, error: moduleError } = await supabase
@@ -62,6 +63,7 @@ export async function generateModule(
         description: generated.description,
         topic: generated.topic,
         difficulty: generated.difficulty,
+        language,
         estimated_duration_mins: 5,
         is_published: false,
       })
