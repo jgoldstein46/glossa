@@ -43,7 +43,7 @@ async function generateSectionAudio(
 }
 
 /**
- * Upload audio buffer to Supabase Storage
+ * Upload audio buffer to Supabase Storage and return a signed URL
  */
 async function uploadAudioToStorage(
   supabase: SupabaseClient,
@@ -64,12 +64,16 @@ async function uploadAudioToStorage(
     throw new Error(`Failed to upload audio: ${error.message}`)
   }
 
-  // Get public URL
-  const { data: urlData } = supabase.storage
+  // Get signed URL (valid for 1 year = 31536000 seconds)
+  const { data: signedData, error: signedError } = await supabase.storage
     .from('glossa-modules')
-    .getPublicUrl(filePath)
+    .createSignedUrl(filePath, 31536000)
 
-  return urlData.publicUrl
+  if (signedError || !signedData?.signedUrl) {
+    throw new Error(`Failed to create signed URL: ${signedError?.message}`)
+  }
+
+  return signedData.signedUrl
 }
 
 /**
@@ -106,8 +110,43 @@ export async function generateAudioForSection(
 }
 
 /**
- * Generate audio for multiple sections in parallel
- * Processes all sections concurrently for faster total execution
+ * Process items with limited concurrency
+ */
+async function processWithConcurrency<T, R>(
+  items: T[],
+  concurrency: number,
+  processor: (item: T) => Promise<R>
+): Promise<R[]> {
+  const results: R[] = []
+  const executing: Promise<void>[] = []
+
+  for (const item of items) {
+    const promise = processor(item).then((result) => {
+      results.push(result)
+    })
+
+    executing.push(promise as unknown as Promise<void>)
+
+    if (executing.length >= concurrency) {
+      await Promise.race(executing)
+      // Remove completed promises
+      const completed = executing.filter(
+        (p) => (p as Promise<void> & { settled?: boolean }).settled
+      )
+      for (const c of completed) {
+        const idx = executing.indexOf(c)
+        if (idx > -1) executing.splice(idx, 1)
+      }
+    }
+  }
+
+  await Promise.all(executing)
+  return results
+}
+
+/**
+ * Generate audio for multiple sections with limited concurrency
+ * ElevenLabs free tier allows max 2 concurrent requests
  */
 export async function generateAudioForSections(
   supabase: SupabaseClient,
@@ -117,8 +156,8 @@ export async function generateAudioForSections(
 ): Promise<Map<string, AudioGenerationResult>> {
   const results = new Map<string, AudioGenerationResult>()
 
-  // Generate all audio in parallel
-  const promises = sections.map(async (section) => {
+  // Process sequentially to avoid rate limits (can increase to 2 for paid plans)
+  for (const section of sections) {
     const result = await generateAudioForSection(
       supabase,
       moduleId,
@@ -127,9 +166,7 @@ export async function generateAudioForSections(
       language
     )
     results.set(section.id, result)
-  })
-
-  await Promise.all(promises)
+  }
 
   return results
 }
