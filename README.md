@@ -1,4 +1,13 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# TutorTalk
+
+AI-Powered Language Learning. Master a language by talking about what you love.
+
+## Features
+
+- Topic-Based Learning
+- Smart AI Tutor
+- Instant Feedback
+- Global Context
 
 ## Getting Started
 
