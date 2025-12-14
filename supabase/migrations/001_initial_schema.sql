@@ -196,12 +196,25 @@ CREATE POLICY "Users can update own progress"
 
 -- ============================================
 -- FUNCTION: Create profile on signup
+-- Pulls name/avatar from OAuth providers (Google, GitHub, etc.)
 -- ============================================
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO profiles (id, email)
-  VALUES (NEW.id, NEW.email);
+  INSERT INTO profiles (id, email, display_name, avatar_url)
+  VALUES (
+    NEW.id,
+    NEW.email,
+    COALESCE(
+      NEW.raw_user_meta_data ->> 'full_name',
+      NEW.raw_user_meta_data ->> 'name',
+      NEW.raw_user_meta_data ->> 'user_name'
+    ),
+    COALESCE(
+      NEW.raw_user_meta_data ->> 'avatar_url',
+      NEW.raw_user_meta_data ->> 'picture'
+    )
+  );
   RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

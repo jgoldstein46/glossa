@@ -193,7 +193,7 @@ CREATE POLICY "Users can insert own quiz results"
 
 ## Triggers
 
-Auto-update `updated_at` timestamp:
+### Auto-update `updated_at` timestamp
 
 ```sql
 CREATE OR REPLACE FUNCTION update_updated_at_column()
@@ -208,4 +208,35 @@ $$ language 'plpgsql';
 CREATE TRIGGER update_profiles_updated_at
   BEFORE UPDATE ON profiles
   FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+```
+
+### Auto-create profile on signup (with OAuth support)
+
+When a user signs up (email/password or social login), a profile is automatically created. For social logins (Google, GitHub, etc.), the name and avatar are pulled from the OAuth provider:
+
+```sql
+CREATE OR REPLACE FUNCTION handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  INSERT INTO profiles (id, email, display_name, avatar_url)
+  VALUES (
+    NEW.id,
+    NEW.email,
+    COALESCE(
+      NEW.raw_user_meta_data ->> 'full_name',  -- Google
+      NEW.raw_user_meta_data ->> 'name',       -- GitHub
+      NEW.raw_user_meta_data ->> 'user_name'   -- Other providers
+    ),
+    COALESCE(
+      NEW.raw_user_meta_data ->> 'avatar_url', -- GitHub
+      NEW.raw_user_meta_data ->> 'picture'     -- Google
+    )
+  );
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER on_auth_user_created
+  AFTER INSERT ON auth.users
+  FOR EACH ROW EXECUTE FUNCTION handle_new_user();
 ```
