@@ -38,6 +38,7 @@ export type Section = {
     title: string;
     content: string;
     order_index: number;
+    audio_url?: string;
     created_at: string;
     updated_at: string;
 };

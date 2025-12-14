@@ -97,6 +97,9 @@ components:
           type: string
         order_index:
           type: integer
+        audio_url:
+          type: string
+          nullable: true
         created_at:
           type: string
           format: date-time
