@@ -1,6 +1,6 @@
 "use client";
 
-import { Module, ProgressStatus } from "@/types/database";
+import { Module, ProgressStatus } from "@/lib/api/client";
 import clsx from "clsx";
 import { CircleCheck, CircleDotDashed } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -27,7 +27,7 @@ export default function ModuleCard({
   return (
     <div
       onClick={() => {
-        router.push(`/modules/${module.title}`);
+        router.push(`/modules/${module.id}`);
       }}
       className={clsx(
         "w-full rounded-lg flex flex-col gap-4 p-4 border border-gray-200",
