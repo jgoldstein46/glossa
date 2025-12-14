@@ -14,7 +14,7 @@ export default function DashboardPage() {
         setSubmitting(true);
         try {
             const res = await createCheckoutSession({
-                priceId: 'prod_xifyHsc6yi530scT0A0nb', // Using specific product/price ID
+                priceSlug: 'speech_token',
                 successUrl: window.location.origin + '/dashboard',
                 cancelUrl: window.location.origin + '/dashboard',
                 autoRedirect: true
