@@ -2,6 +2,7 @@ import { NextRequest } from 'next/server'
 import { createSupabaseServerClient } from '@/lib/supabase/server'
 import { requireAuth } from '@/lib/api/auth'
 import { apiSuccess, apiError, apiPaginated } from '@/lib/api/response'
+import { generateModule } from '@/lib/services/moduleGeneration'
 
 // GET /api/modules - List published modules (public)
 export async function GET(request: NextRequest) {
@@ -41,7 +42,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST /api/modules - Create module (auth required)
+// POST /api/modules - Generate module from title (auth required)
 export async function POST(request: NextRequest) {
   try {
     const auth = await requireAuth()
@@ -50,35 +51,26 @@ export async function POST(request: NextRequest) {
     const supabase = await createSupabaseServerClient()
     const body = await request.json()
 
-    const { title, description, topic, difficulty } = body
-    if (!title || !description || !topic || !difficulty) {
-      return apiError('Missing required fields: title, description, topic, difficulty', 400)
+    const { title, language } = body
+    if (!title || typeof title !== 'string' || title.trim().length === 0) {
+      return apiError('Missing required field: title', 400)
     }
 
-    const validDifficulties = ['beginner', 'intermediate', 'advanced']
-    if (!validDifficulties.includes(difficulty)) {
-      return apiError('Invalid difficulty. Must be: beginner, intermediate, or advanced', 400)
+    const moduleLanguage = typeof language === 'string' && language.trim().length > 0
+      ? language.trim()
+      : 'English'
+
+    const result = await generateModule(supabase, title.trim(), moduleLanguage)
+
+    if (!result.success) {
+      return apiError(result.error, 500, result.details)
     }
 
-    const { data, error } = await supabase
-      .from('modules')
-      .insert({
-        title,
-        description,
-        topic,
-        difficulty,
-        estimated_duration_mins: body.estimated_duration_mins ?? 5,
-        thumbnail_url: body.thumbnail_url ?? null,
-        is_published: body.is_published ?? false,
-      })
-      .select()
-      .single()
-
-    if (error) {
-      return apiError('Failed to create module', 500, error.message)
-    }
-
-    return apiSuccess(data, 201)
+    return apiSuccess({
+      module: result.module,
+      sections: result.sections,
+      quizzes: result.quizzes,
+    }, 201)
   } catch {
     return apiError('Internal server error', 500)
   }
