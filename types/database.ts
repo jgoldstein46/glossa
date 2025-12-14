@@ -36,6 +36,7 @@ export interface Section {
   title: string;
   content: string;
   order_index: number;
+  audio_url: string | null;
   created_at: string;
   updated_at: string;
 }

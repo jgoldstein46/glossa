@@ -6,6 +6,10 @@ import {
   GeneratedModule,
 } from '@/lib/openai/schemas'
 import type { Module, Section, Quiz, QuizQuestion } from '@/lib/api/client/types.gen'
+import {
+  generateAudioForSections,
+  updateSectionsWithAudioUrls,
+} from '@/lib/services/audioGeneration'
 
 interface GenerationSuccess {
   success: true
@@ -140,6 +144,39 @@ export async function generateModule(
       }
 
       quizzes.push(quiz)
+    }
+
+    // Step 4: Generate audio for all sections (best-effort - module still created if audio fails)
+    try {
+      const sectionsForAudio = sections.map((s) => ({
+        id: s.id,
+        content: s.content,
+      }))
+
+      const audioResults = await generateAudioForSections(
+        supabase,
+        module.id,
+        sectionsForAudio,
+        language
+      )
+
+      // Update sections with audio URLs
+      await updateSectionsWithAudioUrls(supabase, audioResults)
+
+      // Refresh sections to get updated audio_url values
+      const { data: updatedSections } = await supabase
+        .from('sections')
+        .select('*')
+        .eq('module_id', module.id)
+        .order('order_index')
+
+      if (updatedSections) {
+        sections.length = 0
+        sections.push(...updatedSections)
+      }
+    } catch (audioError) {
+      // Log audio generation failure but don't fail the entire module creation
+      console.error('Audio generation failed:', audioError)
     }
 
     return {
