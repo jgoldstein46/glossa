@@ -99,6 +99,21 @@ export type QuestionInputType = 'text' | 'voice' | 'multiple_choice';
 export type ProgressStatus = 'in_progress' | 'completed';
 
 // ============================================
+// Evaluation Types
+// ============================================
+
+export interface QuizEvaluationRequest {
+  quiz_id: string
+  answers: Array<{ question_id: string; user_response: string }>
+}
+
+export interface QuizEvaluationResponse {
+  score: number
+  feedback: string
+  answers: QuizAnswer[]
+}
+
+// ============================================
 // Insert Types (for creating new records)
 // ============================================
 

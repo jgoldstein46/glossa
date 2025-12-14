@@ -373,6 +373,44 @@ components:
           type: string
           format: date-time
 
+    # Evaluation schemas
+    QuizEvaluationAnswerInput:
+      type: object
+      properties:
+        question_id:
+          type: string
+          format: uuid
+        user_response:
+          type: string
+      required: [question_id, user_response]
+
+    QuizEvaluationRequest:
+      type: object
+      properties:
+        quiz_id:
+          type: string
+          format: uuid
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuizEvaluationAnswerInput'
+      required: [quiz_id, answers]
+
+    QuizEvaluationResponse:
+      type: object
+      properties:
+        score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        feedback:
+          type: string
+        answers:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuizAnswer'
+      required: [score, feedback, answers]
+
 paths:
   # Modules
   /modules:
@@ -1333,6 +1371,59 @@ paths:
                 $ref: '#/components/schemas/ApiError'
         '404':
           description: Quiz result not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /quiz-results/evaluate:
+    post:
+      operationId: evaluateQuiz
+      summary: Evaluate quiz answers using LLM
+      description: Evaluates quiz answers against section content. Uses LLM for voice/text questions and direct comparison for multiple choice.
+      tags: [Quiz Results]
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuizEvaluationRequest'
+      responses:
+        '200':
+          description: Evaluation result with score and feedback
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    const: true
+                  data:
+                    $ref: '#/components/schemas/QuizEvaluationResponse'
+                required: [success, data]
+        '400':
+          description: Invalid input (missing fields or answers)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Quiz not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Evaluation failed
           content:
             application/json:
               schema:

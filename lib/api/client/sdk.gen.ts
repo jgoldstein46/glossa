@@ -2,7 +2,7 @@
 
 import type { Client, Options as Options2, TDataShape } from './client';
 import { client } from './client.gen';
-import type { CreateModuleData, CreateModuleErrors, CreateModuleResponses, CreateQuizData, CreateQuizErrors, CreateQuizResponses, CreateSectionData, CreateSectionErrors, CreateSectionResponses, DeleteModuleData, DeleteModuleErrors, DeleteModuleResponses, DeleteQuizData, DeleteQuizErrors, DeleteQuizResponses, DeleteSectionData, DeleteSectionErrors, DeleteSectionResponses, GetModuleData, GetModuleErrors, GetModuleResponses, GetModuleSectionsData, GetModuleSectionsErrors, GetModuleSectionsResponses, GetOwnProfileData, GetOwnProfileErrors, GetOwnProfileResponses, GetProfileData, GetProfileErrors, GetProfileResponses, GetProgressData, GetProgressErrors, GetProgressResponses, GetQuizData, GetQuizErrors, GetQuizResponses, GetQuizResultData, GetQuizResultErrors, GetQuizResultResponses, GetSectionData, GetSectionErrors, GetSectionQuizData, GetSectionQuizErrors, GetSectionQuizResponses, GetSectionResponses, ListModulesData, ListModulesErrors, ListModulesResponses, ListProgressData, ListProgressErrors, ListProgressResponses, ListQuizResultsData, ListQuizResultsErrors, ListQuizResultsResponses, ListQuizzesData, ListQuizzesErrors, ListQuizzesResponses, ListSectionsData, ListSectionsErrors, ListSectionsResponses, StartModuleData, StartModuleErrors, StartModuleResponses, SubmitQuizResultData, SubmitQuizResultErrors, SubmitQuizResultResponses, UpdateModuleData, UpdateModuleErrors, UpdateModuleResponses, UpdateProfileData, UpdateProfileErrors, UpdateProfileResponses, UpdateProgressData, UpdateProgressErrors, UpdateProgressResponses, UpdateQuizData, UpdateQuizErrors, UpdateQuizResponses, UpdateSectionData, UpdateSectionErrors, UpdateSectionResponses } from './types.gen';
+import type { CreateModuleData, CreateModuleErrors, CreateModuleResponses, CreateQuizData, CreateQuizErrors, CreateQuizResponses, CreateSectionData, CreateSectionErrors, CreateSectionResponses, DeleteModuleData, DeleteModuleErrors, DeleteModuleResponses, DeleteQuizData, DeleteQuizErrors, DeleteQuizResponses, DeleteSectionData, DeleteSectionErrors, DeleteSectionResponses, EvaluateQuizData, EvaluateQuizErrors, EvaluateQuizResponses, GetModuleData, GetModuleErrors, GetModuleResponses, GetModuleSectionsData, GetModuleSectionsErrors, GetModuleSectionsResponses, GetOwnProfileData, GetOwnProfileErrors, GetOwnProfileResponses, GetProfileData, GetProfileErrors, GetProfileResponses, GetProgressData, GetProgressErrors, GetProgressResponses, GetQuizData, GetQuizErrors, GetQuizResponses, GetQuizResultData, GetQuizResultErrors, GetQuizResultResponses, GetSectionData, GetSectionErrors, GetSectionQuizData, GetSectionQuizErrors, GetSectionQuizResponses, GetSectionResponses, ListModulesData, ListModulesErrors, ListModulesResponses, ListProgressData, ListProgressErrors, ListProgressResponses, ListQuizResultsData, ListQuizResultsErrors, ListQuizResultsResponses, ListQuizzesData, ListQuizzesErrors, ListQuizzesResponses, ListSectionsData, ListSectionsErrors, ListSectionsResponses, StartModuleData, StartModuleErrors, StartModuleResponses, SubmitQuizResultData, SubmitQuizResultErrors, SubmitQuizResultResponses, UpdateModuleData, UpdateModuleErrors, UpdateModuleResponses, UpdateProfileData, UpdateProfileErrors, UpdateProfileResponses, UpdateProgressData, UpdateProgressErrors, UpdateProgressResponses, UpdateQuizData, UpdateQuizErrors, UpdateQuizResponses, UpdateSectionData, UpdateSectionErrors, UpdateSectionResponses } from './types.gen';
 
 export type Options<TData extends TDataShape = TDataShape, ThrowOnError extends boolean = boolean> = Options2<TData, ThrowOnError> & {
     /**
@@ -223,6 +223,21 @@ export const getQuizResult = <ThrowOnError extends boolean = false>(options: Opt
     security: [{ scheme: 'bearer', type: 'http' }],
     url: '/quiz-results/{id}',
     ...options
+});
+
+/**
+ * Evaluate quiz answers using LLM
+ *
+ * Evaluates quiz answers against section content. Uses LLM for voice/text questions and direct comparison for multiple choice.
+ */
+export const evaluateQuiz = <ThrowOnError extends boolean = false>(options: Options<EvaluateQuizData, ThrowOnError>) => (options.client ?? client).post<EvaluateQuizResponses, EvaluateQuizErrors, ThrowOnError>({
+    security: [{ scheme: 'bearer', type: 'http' }],
+    url: '/quiz-results/evaluate',
+    ...options,
+    headers: {
+        'Content-Type': 'application/json',
+        ...options.headers
+    }
 });
 
 /**

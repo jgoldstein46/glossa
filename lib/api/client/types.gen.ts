@@ -164,6 +164,22 @@ export type ProgressUpdate = {
     completed_at?: string;
 };
 
+export type QuizEvaluationAnswerInput = {
+    question_id: string;
+    user_response: string;
+};
+
+export type QuizEvaluationRequest = {
+    quiz_id: string;
+    answers: Array<QuizEvaluationAnswerInput>;
+};
+
+export type QuizEvaluationResponse = {
+    score: number;
+    feedback: string;
+    answers: Array<QuizAnswer>;
+};
+
 export type ListModulesData = {
     body?: never;
     path?: never;
@@ -943,6 +959,46 @@ export type GetQuizResultResponses = {
 };
 
 export type GetQuizResultResponse = GetQuizResultResponses[keyof GetQuizResultResponses];
+
+export type EvaluateQuizData = {
+    body: QuizEvaluationRequest;
+    path?: never;
+    query?: never;
+    url: '/quiz-results/evaluate';
+};
+
+export type EvaluateQuizErrors = {
+    /**
+     * Invalid input (missing fields or answers)
+     */
+    400: ApiError;
+    /**
+     * Unauthorized
+     */
+    401: ApiError;
+    /**
+     * Quiz not found
+     */
+    404: ApiError;
+    /**
+     * Evaluation failed
+     */
+    500: ApiError;
+};
+
+export type EvaluateQuizError = EvaluateQuizErrors[keyof EvaluateQuizErrors];
+
+export type EvaluateQuizResponses = {
+    /**
+     * Evaluation result with score and feedback
+     */
+    200: {
+        success: true;
+        data: QuizEvaluationResponse;
+    };
+};
+
+export type EvaluateQuizResponse = EvaluateQuizResponses[keyof EvaluateQuizResponses];
 
 export type ListProgressData = {
     body?: never;

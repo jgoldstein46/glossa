@@ -200,3 +200,64 @@ Write: "Imagine you're a chef preparing a complex dish. You don't dump all your 
 - Each section should have exactly 3 quiz questions
 
 Remember: Your goal is not to transfer information, but to create understanding. Make learners think, question, and discover.`
+
+// ============================================
+// Quiz Evaluation Types and Schema
+// ============================================
+
+export interface QuestionEvaluation {
+  question_id: string
+  score: number
+  is_correct: boolean
+}
+
+export interface QuizEvaluationResult {
+  overall_score: number
+  feedback: string
+  question_evaluations: QuestionEvaluation[]
+}
+
+export const quizEvaluationSchema: ResponseFormatJSONSchema = {
+  type: 'json_schema',
+  json_schema: {
+    name: 'quiz_evaluation',
+    strict: true,
+    schema: {
+      type: 'object',
+      required: ['overall_score', 'feedback', 'question_evaluations'],
+      additionalProperties: false,
+      properties: {
+        overall_score: {
+          type: 'number',
+          description: 'Overall quiz score from 0-100',
+        },
+        feedback: {
+          type: 'string',
+          description: 'Brief 2-3 sentence feedback summarizing performance and key learning points',
+        },
+        question_evaluations: {
+          type: 'array',
+          items: {
+            type: 'object',
+            required: ['question_id', 'score', 'is_correct'],
+            additionalProperties: false,
+            properties: {
+              question_id: {
+                type: 'string',
+                description: 'The ID of the question being evaluated',
+              },
+              score: {
+                type: 'number',
+                description: 'Score for this question (0-100)',
+              },
+              is_correct: {
+                type: 'boolean',
+                description: 'Whether the answer meets the threshold for correctness (score >= 70)',
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+}
