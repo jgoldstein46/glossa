@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { authWithEmailPassword, signInWithGoogle } from './actions'
+import { authWithEmailPassword } from './actions'
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
@@ -82,7 +82,7 @@ export default function LoginPage() {
             </button>
           </div>
           
-          <div className="relative">
+          {/* <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300" />
             </div>
@@ -104,7 +104,7 @@ export default function LoginPage() {
               </svg>
               <span className="text-sm font-semibold leading-6">Google</span>
             </button>
-          </div>
+          </div> */}
         </form>
       </div>
     </div>

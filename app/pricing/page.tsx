@@ -55,7 +55,7 @@ export default function PricingPage() {
             <div className="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
                 <div className="text-center mb-16">
                     <h1 className="text-4xl font-bold text-gray-900 mb-4">Simple, Transparent Pricing</h1>
-                    <p className="text-xl text-gray-600">Choose the plan that's right for you</p>
+                    <p className="text-xl text-gray-600">Choose the plan thats right for you</p>
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
@@ -99,7 +99,15 @@ export default function PricingPage() {
                                     : 'bg-blue-600 text-white hover:bg-blue-700'
                             }`}
                         >
-                            {isLoading ? 'Processing...' : (currentSubscription ? 'Current Plan' : 'Subscribe Now')}
+                            {isLoading ? 'Processing...' : (
+                                currentSubscription ? (
+                                    currentSubscription.status === 'cancellation_scheduled' 
+                                        ? ((currentSubscription as any).currentPeriodEnd 
+                                            ? `Cancels on ${new Date((currentSubscription as any).currentPeriodEnd).toLocaleDateString()}`
+                                            : 'Cancellation Pending')
+                                        : 'Current Plan'
+                                ) : 'Subscribe Now'
+                            )}
                         </button>
                     </div>
                 </div>
