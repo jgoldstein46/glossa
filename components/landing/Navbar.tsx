@@ -57,6 +57,12 @@ export default async function Navbar() {
                 </>
             ) : (
                 <div className="flex items-center gap-4">
+                    <Link
+                        href="/dashboard"
+                        className="text-gray-600 hover:text-blue-600 transition-colors font-medium"
+                    >
+                        Dashboard
+                    </Link>
                     <span className="text-sm text-gray-500">{user.email}</span>
                     <LogoutButton />
                 </div>
