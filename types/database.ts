@@ -150,3 +150,51 @@ export interface QuizResultWithQuiz extends QuizResult {
 export interface UserModuleProgressWithModule extends UserModuleProgress {
   module: Module;
 }
+
+// ============================================
+// Supabase Database Type
+// ============================================
+
+export type Database = {
+  public: {
+    Tables: {
+      profiles: {
+        Row: Profile
+        Insert: ProfileInsert
+        Update: ProfileUpdate
+      }
+      modules: {
+        Row: Module
+        Insert: ModuleInsert
+        Update: ModuleUpdate
+      }
+      sections: {
+        Row: Section
+        Insert: SectionInsert
+        Update: SectionUpdate
+      }
+      quizzes: {
+        Row: Quiz
+        Insert: QuizInsert
+        Update: QuizUpdate
+      }
+      quiz_results: {
+        Row: QuizResult
+        Insert: QuizResultInsert
+        Update: never
+      }
+      user_module_progress: {
+        Row: UserModuleProgress
+        Insert: UserModuleProgressInsert
+        Update: UserModuleProgressUpdate
+      }
+    }
+    Views: Record<string, never>
+    Functions: Record<string, never>
+    Enums: {
+      difficulty: Difficulty
+      question_input_type: QuestionInputType
+      progress_status: ProgressStatus
+    }
+  }
+}
