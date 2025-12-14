@@ -3,7 +3,7 @@ import { useBilling } from '@flowglad/nextjs';
 import { useState } from 'react';
 
 export default function PricingPage() {
-    const { createCheckoutSession, loaded } = useBilling();
+    const { createCheckoutSession, currentSubscription, loaded } = useBilling();
     const [submitting, setSubmitting] = useState(false);
 
     const handleSubscribe = async (priceSlug: string) => {
@@ -46,8 +46,14 @@ export default function PricingPage() {
                             <li className="flex items-center gap-2">✓ 100k AI Tokens / month</li>
                             <li className="flex items-center gap-2">✓ Basic Support</li>
                         </ul>
-                        <button className="w-full py-3 px-6 rounded-lg bg-gray-900 text-white font-semibold hover:bg-gray-800 transition">
-                            Current Plan
+                        <button 
+                            className={`w-full py-3 px-6 rounded-lg font-semibold transition ${
+                                !currentSubscription 
+                                    ? 'bg-gray-900 text-white cursor-default' 
+                                    : 'bg-white text-gray-900 border border-gray-200 hover:bg-gray-50'
+                            }`}
+                        >
+                            {!currentSubscription ? 'Current Plan' : 'Downgrade'}
                         </button>
                     </div>
 
@@ -62,11 +68,15 @@ export default function PricingPage() {
                             <li className="flex items-center gap-2">✓ Advanced Analytics</li>
                         </ul>
                         <button 
-                            onClick={() => handleSubscribe('starter_monthly')}
-                            disabled={isLoading}
-                            className="w-full py-3 px-6 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition shadow-lg hover:shadow-xl disabled:opacity-50"
+                            onClick={() => !currentSubscription && handleSubscribe('starter_monthly')}
+                            disabled={isLoading || !!currentSubscription}
+                            className={`w-full py-3 px-6 rounded-lg font-semibold transition shadow-lg hover:shadow-xl disabled:opacity-50 disabled:shadow-none ${
+                                !!currentSubscription
+                                    ? 'bg-green-600 text-white'
+                                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                            }`}
                         >
-                            {isLoading ? 'Processing...' : 'Subscribe Now'}
+                            {isLoading ? 'Processing...' : (currentSubscription ? 'Current Plan' : 'Subscribe Now')}
                         </button>
                     </div>
                 </div>
