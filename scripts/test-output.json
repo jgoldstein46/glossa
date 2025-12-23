@@ -1,0 +1,444 @@
+[
+  {
+    "title": "Persian Greetings",
+    "generatedInSeconds": 71.79,
+    "tokens": {
+      "total": 10964,
+      "prompt": 1334,
+      "completion": 9630
+    },
+    "module": {
+      "description": "Learn essential Persian greetings, pronunciation, and polite closings. You’ll greet confidently, ask how someone is, respond warmly, and close conversations naturally in everyday situations.",
+      "topic": "Language Learning",
+      "difficulty": "beginner",
+      "sections": [
+        {
+          "title": "Section 1: Saying Hello in Persian",
+          "content": "Imagine stepping into a cozy cafe in Tehran and meeting someone new. You want to start on the right foot, not with a blank stare. The simplest, universal opener is سلام (salaam). This small word carries trust and warmth, and it works in almost every setting from a busy market to a quiet classroom. You’ll notice the tone matters: a clear, friendly voice reads as approachable; a rushed or flat tone can feel distant. So, here’s your starter kit for greetings: start with سلام, keep your voice even, and smile. If you’re greeting at a specific time of day, you can add صبح بخیر (sobh bekheyr) for good morning or روز بخیر (rooz bekheyr) for good day. For formal moments or when meeting elders, you can try سلام علیکم (salaam alaykum) to show extra respect, though in everyday conversation, سلام alone usually works. Your challenge is to practice a natural tempo rather than memorizing a loud, stiff line. The real aha moment: greetings are an invitation to connect, not just a ritual. Connection: practice with a friend or a shopkeeper and notice how small phrases open bigger conversations. Now you’re ready to ask about someone’s well being in Section 2.",
+          "order_index": 0,
+          "quiz": {
+            "title": "Section 1 Quiz",
+            "questions": [
+              {
+                "question_text": "Describe in your own words why starting a conversation with سلام matters in Persian culture.",
+                "input_type": "voice",
+                "options": null,
+                "correct_answer": null,
+                "order_index": 0
+              },
+              {
+                "question_text": "Which phrase is the standard Persian greeting for hello?",
+                "input_type": "multiple_choice",
+                "options": [
+                  "سلام",
+                  "خداحافظ",
+                  "صبح بخیر",
+                  "شب بخیر"
+                ],
+                "correct_answer": "سلام",
+                "order_index": 1
+              },
+              {
+                "question_text": "Which is a common morning greeting in Persian?",
+                "input_type": "multiple_choice",
+                "options": [
+                  "صبح بخیر",
+                  "سلام",
+                  "شب بخیر",
+                  "روز بخیر"
+                ],
+                "correct_answer": "صبح بخیر",
+                "order_index": 2
+              }
+            ]
+          }
+        },
+        {
+          "title": "Section 2: Asking How Someone Is",
+          "content": "You’ve said hello. Now you want to check in on how someone is doing, which is a natural next step in any conversation. In Persian, you’ll often hear حال شما چطور است؟ (haal-e shomâ che tor ast?) or the more casual چطوری؟ (chetori?). The form you choose signals your relationship: با شما صحبت می کنم (formal) versus گفتن چطوری؟ (informal). Imagine you’re meeting a colleague versus a close friend; your language shifts just a little, but the goal remains the same: show genuine interest. As you learn, notice how Persian uses state and well-being as the doorway to conversation: you ask about their current state, and they reply with a simple good-bad update, often followed by a brief explanation. Quick tip: a polite smile and slight nod reinforce sincerity. Core insight: in Persian, asking about someone’s condition is less about the exact words than about conveying care through formality and tone. Connection: in real life, you’ll blend greeting with this question to keep chats flowing. Ready to practice closings in Section 3?",
+          "order_index": 1,
+          "quiz": {
+            "title": "Section 2 Quiz",
+            "questions": [
+              {
+                "question_text": "Explain in your own words how you would ask 'How are you?' in Persian.",
+                "input_type": "voice",
+                "options": null,
+                "correct_answer": null,
+                "order_index": 0
+              },
+              {
+                "question_text": "Which phrase is a formal way to ask 'How are you?'",
+                "input_type": "multiple_choice",
+                "options": [
+                  "حال شما چطور است؟",
+                  "چطوری؟",
+                  "چی خبر؟",
+                  "کجایی؟"
+                ],
+                "correct_answer": "حال شما چطور است؟",
+                "order_index": 1
+              },
+              {
+                "question_text": "Which of these demonstrates combining a greeting and asking about well-being in Persian?",
+                "input_type": "multiple_choice",
+                "options": [
+                  "سلام, حال شما چطور است؟",
+                  "سلام، خداحافظ",
+                  "صبح بخیر",
+                  "خداحافظ, شب بخیر"
+                ],
+                "correct_answer": "سلام, حال شما چطور است؟",
+                "order_index": 2
+              }
+            ]
+          }
+        },
+        {
+          "title": "Section 3: Farewell and Polite Closings",
+          "content": "Great conversations end with warmth and respect. The word to say goodbye is خداحافظ (khodahafez). It signals that you value the interaction and look forward to the next time you meet. If you want to acknowledge thanks or politeness, you’ll hear and use یک پاسخ معمول: خواهش می‌کنم (khahesh mikonam) meaning you’re welcome, or متشکرم (mamnun) to say thanks. The flow of closing matters: you might finish with a small farewell line, then a friendly sign-off later on. In more formal contexts or with someone older, you may extend the courtesy with a brief well-wishing remark before goodbye. The aha moment here is that closings aren’t just a word; they’re a social ritual that signals respect and continuity of relationship. Connection: practice closing a short chat with خداحافظ, then try a longer exchange that includes a thank-you response in Section 5.",
+          "order_index": 2,
+          "quiz": {
+            "title": "Section 3 Quiz",
+            "questions": [
+              {
+                "question_text": "Explain how you would politely close a Persian conversation.",
+                "input_type": "voice",
+                "options": null,
+                "correct_answer": null,
+                "order_index": 0
+              },
+              {
+                "question_text": "Which phrase means goodbye in Persian?",
+                "input_type": "multiple_choice",
+                "options": [
+                  "خداحافظ",
+                  "سلام",
+                  "صبح بخیر",
+                  "شب بخیر"
+                ],
+                "correct_answer": "خداحافظ",
+                "order_index": 1
+              },
+              {
+                "question_text": "What is a natural response to someone thanking you?",
+                "input_type": "multiple_choice",
+                "options": [
+                  "خواهش می‌کنم",
+                  "متشکرم",
+                  "سلام",
+                  "خداحافظ"
+                ],
+                "correct_answer": "خواهش می‌کنم",
+                "order_index": 2
+              }
+            ]
+          }
+        },
+        {
+          "title": "Section 4: Pronunciation and Intonation",
+          "content": "Perfection in greetings comes with a light touch on pronunciation. Persian syllables are crisp, and a little intentional rhythm makes you sound natural rather than hesitant. Start with سلام pronounced sa-laam, stressing the first syllable just a touch. The vowel sounds are simple: a steady ah/aa in salaam and a soft, short o in hello-like phrases. A common trap is rushing through greetings, which makes you sound insincere or hurried. Pausing briefly after سلام gives your listener a moment to respond and shows you’re present. If you want to try time-of-day phrases, remember صبح بخیر (sobh bekheyr) and روز بخیر (rooz bekheyr) have longer vowels that deserve a gentle hold. Practice with a friend by reading the phrases aloud, then listening to each other’s intonation. The aha here is that small adjustments in tempo and emphasis turn a plain line into a warm invitation. Connection: next, you’ll weave everything into a short dialogue that uses greeting, question, response, and farewell in one go.",
+          "order_index": 3,
+          "quiz": {
+            "title": "Section 4 Quiz",
+            "questions": [
+              {
+                "question_text": "Explain how you would practice Persian pronunciation of greetings to a friend.",
+                "input_type": "voice",
+                "options": null,
+                "correct_answer": null,
+                "order_index": 0
+              },
+              {
+                "question_text": "Which letter starts the word السلام with an s sound?",
+                "input_type": "multiple_choice",
+                "options": [
+                  "س",
+                  "ش",
+                  "ل",
+                  "ا"
+                ],
+                "correct_answer": "س",
+                "order_index": 1
+              },
+              {
+                "question_text": "Which sequence shows greeting followed by a polite request?",
+                "input_type": "multiple_choice",
+                "options": [
+                  "سلام، لطفاً کمک کنید",
+                  "خداحافظ، سلام",
+                  "صبح بخیر، خداحافظ",
+                  "سلام، شب بخیر"
+                ],
+                "correct_answer": "سلام، لطفاً کمک کنید",
+                "order_index": 2
+              }
+            ]
+          }
+        },
+        {
+          "title": "Section 5: Put It All Together",
+          "content": "Now you’re ready to blend greetings, questions, responses, and closings into a tiny real-life exchange. Picture meeting someone new at a social event. You start with سلام, then ask حال شما چطور است؟, listen to the answer, respond politely with fine words like خوبم، ممنون, and finish with خداحافظ as you part ways. A complete mini-dialogue might look like this: سلام، حال شما چطور است؟ خوبم، ممنون. خداحافظ. The point is practice in context: you’re not memorizing isolated phrases but building a flexible toolkit for everyday conversations. Simple variations, such as switching informal forms with friends or staying formal with elders, help you adapt to the situation. Real-world practice could be a language buddy, a shopkeeper, or a classmate. Here comes your synthesis moment: you’ll perform a short exchange that uses all four elements. After that, you’ll be ready to greet confidently in Persian in any casual setting and move on to more phrases with ease.",
+          "order_index": 4,
+          "quiz": {
+            "title": "Section 5 Quiz",
+            "questions": [
+              {
+                "question_text": "Describe a short Persian dialogue combining greeting, asking how are you, response, and farewell.",
+                "input_type": "voice",
+                "options": null,
+                "correct_answer": null,
+                "order_index": 0
+              },
+              {
+                "question_text": "Which sequence is the most natural full exchange?",
+                "input_type": "multiple_choice",
+                "options": [
+                  "سلام، حال شما چطور است؟ خوبم، ممنون. خداحافظ.",
+                  "خداحافظ، سلام.",
+                  "صبح بخیر، شب بخیر",
+                  "سلام، خداحافظ"
+                ],
+                "correct_answer": "سلام، حال شما چطور است؟ خوبم، ممنون. خداحافظ.",
+                "order_index": 1
+              },
+              {
+                "question_text": "Which option best demonstrates a complete Persian exchange from greeting to farewell?",
+                "input_type": "multiple_choice",
+                "options": [
+                  "سلام، حال شما چطور است؟ خوبم، ممنون. خداحافظ.",
+                  "خداحافظ، سلام.",
+                  "صبح بخیر, شب بخیر",
+                  "سلام، شب بخیر"
+                ],
+                "correct_answer": "سلام، حال شما چطور است؟ خوبم، ممنون. خداحافظ.",
+                "order_index": 2
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "title": "Day of the Dead Mexico",
+    "generatedInSeconds": 87.96,
+    "tokens": {
+      "total": 10710,
+      "prompt": 1336,
+      "completion": 9374
+    },
+    "module": {
+      "description": "Learn the Day of the Dead in Mexico: its history, altars called ofrendas, symbols like marigolds and sugar skulls, and how families honor memory with joy, color, and community.",
+      "topic": "Culture",
+      "difficulty": "beginner",
+      "sections": [
+        {
+          "title": "Section 1: Why a joyful visit from the dead?",
+          "content": "Imagine a calendar that invites the dead to return for a visit, not as scary ghosts but as cherished guests. What would you tell a friend about Dia de los Muertos, the Day of the Dead? This festival, observed mainly in Mexico, happens around Oct 31 through Nov 2 and blends Indigenous beliefs about ancestors with Catholic traditions. It is not a somber mourning ritual, but a family celebration that invites loved ones to share stories, food, and memories. You might see bright colors, marigold petals forming pathways, and sugar skulls painted with names. Have you ever noticed how color and music can change the mood of a story you tell about someone you miss? The core idea is simple: death is part of life, and memory can be a bridge that keeps people connected across generations. When you travel to towns for Dia de los Muertos, you’ll notice cemeteries and homes transformed into joyful spaces where families laugh, remember, and honor. This sets up our next idea: the magical centerpiece of this celebration, the ofrenda or home altar.",
+          "order_index": 0,
+          "quiz": {
+            "title": "Section 1 Quiz",
+            "questions": [
+              {
+                "question_text": "Explain in your own words why Dia de los Muertos is celebrated with joy rather than fear.",
+                "input_type": "voice",
+                "options": null,
+                "correct_answer": null,
+                "order_index": 0
+              },
+              {
+                "question_text": "What best describes the purpose of Day of the Dead symbols?",
+                "input_type": "multiple_choice",
+                "options": [
+                  "To scare away spirits",
+                  "To guide spirits home with light and color",
+                  "To decorate the table only",
+                  "To bring luck in harvest"
+                ],
+                "correct_answer": "To guide spirits home with light and color",
+                "order_index": 1
+              },
+              {
+                "question_text": "Which statement best captures the mood of Dia de los Muertos?",
+                "input_type": "multiple_choice",
+                "options": [
+                  "Somber and quiet",
+                  "Joyful remembrance",
+                  "Commercial and trendy",
+                  "Religious ritual only"
+                ],
+                "correct_answer": "Joyful remembrance",
+                "order_index": 2
+              }
+            ]
+          }
+        },
+        {
+          "title": "Section 2: The ofrenda and the altar",
+          "content": "If you wanted to guide a visiting spirit back home, what would you put on a doorstep altar? Dia de los Muertos centers on the ofrenda, a personal altar built in homes and cemeteries. On it you place photos of loved ones, their favorite foods, a glass of water, salt to purify, and candles to light the path for the soul. Marigold flowers, the flor de los muertos, decorate the path because their bright scent and color are said to lead spirits through the living world. Many families also include pan de muerto, sugar skulls, and notes or objects that belonged to the departed. Altars echo the personality and memories of the person who died, turning grief into a shared story rather than a lone ache. The practice blends Indigenous reverence for ancestors with Catholic rituals, and while dates are fixed (Oct 31–Nov 2), each home or community makes its own variation. The core insight you’ll feel here is that an altar is a map of memory—a way to invite a person back for a visit. This sets up the next section’s deeper symbols of life and death, like sugar skulls and La Catrina.",
+          "order_index": 1,
+          "quiz": {
+            "title": "Section 2 Quiz",
+            "questions": [
+              {
+                "question_text": "Explain in your own words how an ofrenda helps a family remember someone.",
+                "input_type": "voice",
+                "options": null,
+                "correct_answer": null,
+                "order_index": 0
+              },
+              {
+                "question_text": "Which item is NOT typically found on an ofrenda?",
+                "input_type": "multiple_choice",
+                "options": [
+                  "Photos",
+                  "Fireworks",
+                  "Water",
+                  "Pan de muerto"
+                ],
+                "correct_answer": "Fireworks",
+                "order_index": 1
+              },
+              {
+                "question_text": "Which statement best describes the purpose of an ofrenda?",
+                "input_type": "multiple_choice",
+                "options": [
+                  "For decoration only",
+                  "To guide spirits home",
+                  "To scare away memories",
+                  "To earn good luck"
+                ],
+                "correct_answer": "To guide spirits home",
+                "order_index": 2
+              }
+            ]
+          }
+        },
+        {
+          "title": "Section 3: Calaveras, La Catrina, and sugar skulls",
+          "content": "What does a painted skull really mean? Sugar skulls, or calaveras, are crafted to celebrate and honor the dead, not to frighten. They’re often personalized with the name of a loved one and bright colors that echo life rather than fear. You’ll also hear about La Catrina, a stylish skeleton created by artist Jose Guadalupe Posada and popularized by Diego Rivera. She mocks death’s pretensions and reminds us that everyone, rich or poor, faces mortality. Pan de muerto, a soft bread shaped like bones, is shared and offered as part of the feast. The global imagination of Dia de los Muertos has even influenced modern art, fashion, and street murals—death becomes a canvas for color and storytelling. The real reveal here is that death is acknowledged with humor, respect, and a sense of belonging. When you see the bright skulls and elegant skeletons in posters or streets, you’re seeing a cultural reframing: life is measured by memories kept alive, not only by rituals observed. Ready to see how these symbols manifest in cities and towns?",
+          "order_index": 2,
+          "quiz": {
+            "title": "Section 3 Quiz",
+            "questions": [
+              {
+                "question_text": "Explain in your own words what the sugar skull symbolizes.",
+                "input_type": "voice",
+                "options": null,
+                "correct_answer": null,
+                "order_index": 0
+              },
+              {
+                "question_text": "What is La Catrina best known for?",
+                "input_type": "multiple_choice",
+                "options": [
+                  "A saint",
+                  "A satirical figure of death",
+                  "A food dish",
+                  "A dance"
+                ],
+                "correct_answer": "A satirical figure of death",
+                "order_index": 1
+              },
+              {
+                "question_text": "Which element best shows death as part of life in section 3?",
+                "input_type": "multiple_choice",
+                "options": [
+                  "Marigolds",
+                  "Pan de muerto",
+                  "Sugar skulls",
+                  "Candles"
+                ],
+                "correct_answer": "Sugar skulls",
+                "order_index": 2
+              }
+            ]
+          }
+        },
+        {
+          "title": "Section 4: Dia de los Muertos in the city",
+          "content": " cities can blend ancient roots with modern life. In many places, public altars appear in plazas, schools organize workshops, and parades celebrate la Catrina’s playful spirit. Street markets fill with pan de muerto, chocolate, and sugar skull crafts. Public art, grand processions, and community ofrendas invite neighbors of all ages to participate, making the festival a shared experience rather than a private ritual. This adaptability is part of why Dia de los Muertos remains vibrant: it travels with people, across neighborhoods and borders, while keeping memory and family at its core. The heart of the tradition stays the same—remembering loved ones and inviting them to share the moment with the living—just expressed in different spaces: homes, cemeteries, schools, and streets. The connection to everyday life is clear: you can honor someone you’ve lost by building a small altar, storytelling, and sharing food with others. Now imagine designing your own local Dia de los Muertos moment.",
+          "order_index": 3,
+          "quiz": {
+            "title": "Section 4 Quiz",
+            "questions": [
+              {
+                "question_text": "Explain in your own words the role of public altars in a city.",
+                "input_type": "voice",
+                "options": null,
+                "correct_answer": null,
+                "order_index": 0
+              },
+              {
+                "question_text": "Which item is least associated with an ofrenda?",
+                "input_type": "multiple_choice",
+                "options": [
+                  "Photos",
+                  "Pan de muerto",
+                  "Water",
+                  "Fireworks"
+                ],
+                "correct_answer": "Fireworks",
+                "order_index": 1
+              },
+              {
+                "question_text": "Which element best demonstrates the memory-sharing idea from sections 2–3?",
+                "input_type": "multiple_choice",
+                "options": [
+                  "Photos on an altar",
+                  "Radio broadcasts",
+                  "Neon lights",
+                  "Gas stoves"
+                ],
+                "correct_answer": "Photos on an altar",
+                "order_index": 2
+              }
+            ]
+          }
+        },
+        {
+          "title": "Section 5: Design your own Dia de los Muertos experience",
+          "content": "If you were to host a mini Dia de los Muertos in your community, what would you include to honor memory and bring people together? Start with a small home altar or classroom display. Put a photo of someone you want to remember, a glass of water, a small plate of pan de muerto or fruit, and a few marigold blossoms. Add a decorative sugar skull or drawing of La Catrina to symbolize death as an equalizing, rather than frightening, force. Invite stories: a few friends share a memory or a favorite moment with the person you’re remembering. If you can, invite neighbors or classmates to contribute a note or a photo. The aim is to create a living mosaic where past and present mingle through food, color, and conversation. The big idea: memory, community, and celebration are the heart of Dia de los Muertos. Your mini celebration can be simple, inclusive, and joyful, bridging generations and cultures. Now, what would your design look like?",
+          "order_index": 4,
+          "quiz": {
+            "title": "Section 5 Quiz",
+            "questions": [
+              {
+                "question_text": "Explain in your own words how you would design a mini Dia de los Muertos event.",
+                "input_type": "voice",
+                "options": null,
+                "correct_answer": null,
+                "order_index": 0
+              },
+              {
+                "question_text": "Which element is least associated with Dia de los Muertos?",
+                "input_type": "multiple_choice",
+                "options": [
+                  "Marigolds",
+                  "Sugar skulls",
+                  "Ghost hunting",
+                  "Pan de muerto"
+                ],
+                "correct_answer": "Ghost hunting",
+                "order_index": 1
+              },
+              {
+                "question_text": "Which combination best captures core themes from sections 1–4?",
+                "input_type": "multiple_choice",
+                "options": [
+                  "Fear and isolation",
+                  "Memory, community, life through color",
+                  "Wealth and status",
+                  "Food only"
+                ],
+                "correct_answer": "Memory, community, life through color",
+                "order_index": 2
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+]
