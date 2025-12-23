@@ -201,7 +201,7 @@ CREATE POLICY "Users can update own progress"
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO profiles (id, email, display_name, avatar_url)
+  INSERT INTO public.profiles (id, email, display_name, avatar_url)
   VALUES (
     NEW.id,
     NEW.email,

@@ -1,26 +1,26 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { authWithEmailPassword } from './actions'
+import { useState } from "react";
+import { authWithEmailPassword, signInWithGoogle } from "./actions";
 
 export default function LoginPage() {
-  const [error, setError] = useState<string | null>(null)
-  const [message, setMessage] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   async function handleSubmit(formData: FormData) {
-    setLoading(true)
-    setError(null)
-    setMessage(null)
-    
-    const result = await authWithEmailPassword(formData)
-    
+    setLoading(true);
+    setError(null);
+    setMessage(null);
+
+    const result = await authWithEmailPassword(formData);
+
     if (result?.error) {
-      setError(result.error)
+      setError(result.error);
     } else if (result?.message) {
-      setMessage(result.message)
+      setMessage(result.message);
     }
-    setLoading(false)
+    setLoading(false);
   }
 
   return (
@@ -31,7 +31,7 @@ export default function LoginPage() {
             Welcome to TutorTalk
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
-             Sign in or create an account
+            Sign in or create an account
           </p>
         </div>
         <form action={handleSubmit} className="mt-8 space-y-6">
@@ -45,7 +45,6 @@ export default function LoginPage() {
                 name="email"
                 type="email"
                 autoComplete="email"
-                required
                 className="relative block w-full rounded-t-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 px-3"
                 placeholder="Email address"
               />
@@ -59,7 +58,6 @@ export default function LoginPage() {
                 name="password"
                 type="password"
                 autoComplete="current-password"
-                required
                 className="relative block w-full rounded-b-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 px-3"
                 placeholder="Password"
               />
@@ -67,9 +65,11 @@ export default function LoginPage() {
           </div>
 
           {(error || message) && (
-             <div className={`text-sm text-center ${error ? 'text-red-600' : 'text-green-600'}`}>
-                {error || message}
-             </div>
+            <div
+              className={`text-sm text-center ${error ? "text-red-600" : "text-green-600"}`}
+            >
+              {error || message}
+            </div>
           )}
 
           <div>
@@ -78,23 +78,26 @@ export default function LoginPage() {
               disabled={loading}
               className="group relative flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:opacity-70"
             >
-              {loading ? 'Processing...' : 'Continue'}
+              {loading ? "Processing..." : "Continue"}
             </button>
           </div>
-          
-          {/* <div className="relative">
+
+          <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-300" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="bg-gray-50 px-2 text-gray-500">Or continue with</span>
+              <span className="bg-gray-50 px-2 text-gray-500">
+                Or continue with
+              </span>
             </div>
           </div>
 
           <div>
-             <button
+            <button
+              type="submit"
               formAction={signInWithGoogle}
-              className="flex w-full justify-center gap-3 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:ring-transparent"
+              className="flex hover:cursor-pointer w-full justify-center gap-3 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus-visible:ring-transparent"
             >
               <svg className="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
                 <path
@@ -104,9 +107,9 @@ export default function LoginPage() {
               </svg>
               <span className="text-sm font-semibold leading-6">Google</span>
             </button>
-          </div> */}
+          </div>
         </form>
       </div>
     </div>
-  )
+  );
 }
