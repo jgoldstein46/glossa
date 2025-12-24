@@ -123,7 +123,7 @@ export async function generateModule(
       }
 
       sections.push(section);
-      console.log("Inserting qustions for section: ", section.id);
+      console.log("Inserting questions for section: ", section.id);
       // Create quiz for section
       const questionsWithIds: QuizQuestion[] = sectionData.quiz.questions.map(
         (q) => ({

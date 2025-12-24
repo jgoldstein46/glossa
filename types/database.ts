@@ -87,62 +87,61 @@ export interface QuizAnswer {
   question_id: string;
   user_response: string;
   is_correct: boolean | null;
+  feedback: string | null;
 }
 
 // ============================================
 // Enums / Union Types
 // ============================================
 
-export type Difficulty = 'beginner' | 'intermediate' | 'advanced';
+export type Difficulty = "beginner" | "intermediate" | "advanced";
 
-export type QuestionInputType = 'text' | 'voice' | 'multiple_choice';
+export type QuestionInputType = "text" | "voice" | "multiple_choice";
 
-export type ProgressStatus = 'in_progress' | 'completed';
-
-// ============================================
-// Evaluation Types
-// ============================================
-
-export interface QuizEvaluationRequest {
-  quiz_id: string
-  answers: Array<{ question_id: string; user_response: string }>
-}
-
-export interface QuizEvaluationResponse {
-  score: number
-  feedback: string
-  answers: QuizAnswer[]
-}
+export type ProgressStatus = "in_progress" | "completed";
 
 // ============================================
 // Insert Types (for creating new records)
 // ============================================
 
-export type ProfileInsert = Omit<Profile, 'created_at' | 'updated_at'>;
+export type ProfileInsert = Omit<Profile, "created_at" | "updated_at">;
 
-export type ModuleInsert = Omit<Module, 'id' | 'created_at' | 'updated_at'>;
+export type ModuleInsert = Omit<Module, "id" | "created_at" | "updated_at">;
 
-export type SectionInsert = Omit<Section, 'id' | 'created_at' | 'updated_at'>;
+export type SectionInsert = Omit<Section, "id" | "created_at" | "updated_at">;
 
-export type QuizInsert = Omit<Quiz, 'id' | 'created_at' | 'updated_at'>;
+export type QuizInsert = Omit<Quiz, "id" | "created_at" | "updated_at">;
 
-export type QuizResultInsert = Omit<QuizResult, 'id' | 'created_at'>;
+export type QuizResultInsert = Omit<QuizResult, "id" | "created_at">;
 
-export type UserModuleProgressInsert = Omit<UserModuleProgress, 'id' | 'started_at'>;
+export type UserModuleProgressInsert = Omit<
+  UserModuleProgress,
+  "id" | "started_at"
+>;
 
 // ============================================
 // Update Types (for partial updates)
 // ============================================
 
-export type ProfileUpdate = Partial<Omit<Profile, 'id' | 'created_at' | 'updated_at'>>;
+export type ProfileUpdate = Partial<
+  Omit<Profile, "id" | "created_at" | "updated_at">
+>;
 
-export type ModuleUpdate = Partial<Omit<Module, 'id' | 'created_at' | 'updated_at'>>;
+export type ModuleUpdate = Partial<
+  Omit<Module, "id" | "created_at" | "updated_at">
+>;
 
-export type SectionUpdate = Partial<Omit<Section, 'id' | 'created_at' | 'updated_at'>>;
+export type SectionUpdate = Partial<
+  Omit<Section, "id" | "created_at" | "updated_at">
+>;
 
-export type QuizUpdate = Partial<Omit<Quiz, 'id' | 'created_at' | 'updated_at'>>;
+export type QuizUpdate = Partial<
+  Omit<Quiz, "id" | "created_at" | "updated_at">
+>;
 
-export type UserModuleProgressUpdate = Partial<Omit<UserModuleProgress, 'id' | 'user_id' | 'module_id' | 'started_at'>>;
+export type UserModuleProgressUpdate = Partial<
+  Omit<UserModuleProgress, "id" | "user_id" | "module_id" | "started_at">
+>;
 
 // ============================================
 // Joined Types (for queries with relations)
@@ -160,8 +159,8 @@ export interface ModuleWithSectionsAndQuizzes extends Module {
   sections: SectionWithQuiz[];
 }
 
-export interface QuizResultWithQuiz extends QuizResult {
-  quiz: Quiz;
+export interface QuizWithQuizResults extends Quiz {
+  quiz_results: QuizResult[];
 }
 
 export interface UserModuleProgressWithModule extends UserModuleProgress {
@@ -176,42 +175,42 @@ export type Database = {
   public: {
     Tables: {
       profiles: {
-        Row: Profile
-        Insert: ProfileInsert
-        Update: ProfileUpdate
-      }
+        Row: Profile;
+        Insert: ProfileInsert;
+        Update: ProfileUpdate;
+      };
       modules: {
-        Row: Module
-        Insert: ModuleInsert
-        Update: ModuleUpdate
-      }
+        Row: Module;
+        Insert: ModuleInsert;
+        Update: ModuleUpdate;
+      };
       sections: {
-        Row: Section
-        Insert: SectionInsert
-        Update: SectionUpdate
-      }
+        Row: Section;
+        Insert: SectionInsert;
+        Update: SectionUpdate;
+      };
       quizzes: {
-        Row: Quiz
-        Insert: QuizInsert
-        Update: QuizUpdate
-      }
+        Row: Quiz;
+        Insert: QuizInsert;
+        Update: QuizUpdate;
+      };
       quiz_results: {
-        Row: QuizResult
-        Insert: QuizResultInsert
-        Update: never
-      }
+        Row: QuizResult;
+        Insert: QuizResultInsert;
+        Update: never;
+      };
       user_module_progress: {
-        Row: UserModuleProgress
-        Insert: UserModuleProgressInsert
-        Update: UserModuleProgressUpdate
-      }
-    }
-    Views: Record<string, never>
-    Functions: Record<string, never>
+        Row: UserModuleProgress;
+        Insert: UserModuleProgressInsert;
+        Update: UserModuleProgressUpdate;
+      };
+    };
+    Views: Record<string, never>;
+    Functions: Record<string, never>;
     Enums: {
-      difficulty: Difficulty
-      question_input_type: QuestionInputType
-      progress_status: ProgressStatus
-    }
-  }
-}
+      difficulty: Difficulty;
+      question_input_type: QuestionInputType;
+      progress_status: ProgressStatus;
+    };
+  };
+};

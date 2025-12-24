@@ -5,21 +5,12 @@ import {
   evaluateQuiz,
   getSectionQuiz,
   Quiz,
-  QuizQuestion,
   QuizEvaluationAnswerInput,
-  QuizEvaluationResponse,
+  submitQuizResult,
 } from "@/lib/api/client";
 import { useScribe } from "@elevenlabs/react";
 import clsx from "clsx";
-import {
-  ArrowRight,
-  Check,
-  Loader2,
-  Mic,
-  MicOff,
-  Square,
-  X,
-} from "lucide-react";
+import { ArrowRight, Check, Loader2, Mic, Square, X } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
@@ -165,7 +156,9 @@ function MultipleChoiceInput({
           <div
             className={clsx(
               "w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0",
-              value === option ? "border-blue-600 bg-blue-600" : "border-gray-300",
+              value === option
+                ? "border-blue-600 bg-blue-600"
+                : "border-gray-300",
             )}
           >
             {value === option && <Check className="w-3 h-3 text-white" />}
@@ -213,7 +206,9 @@ export default function QuizPage() {
 
   const currentQuestion = quiz?.questions[currentQuestionIndex];
   const totalQuestions = quiz?.questions.length || 0;
-  const currentAnswer = currentQuestion ? answers[currentQuestion.id] || "" : "";
+  const currentAnswer = currentQuestion
+    ? answers[currentQuestion.id] || ""
+    : "";
   const isLastQuestion = currentQuestionIndex === totalQuestions - 1;
   const canProceed = currentAnswer.trim().length > 0;
 
@@ -276,16 +271,14 @@ export default function QuizPage() {
       });
 
       if (result.data?.success) {
-        // Store results in sessionStorage for results page
-        sessionStorage.setItem(
-          "quizResult",
-          JSON.stringify({
-            ...result.data.data,
-            quiz,
-            moduleId: params.id,
-            sectionId: params.sectionId,
-          }),
-        );
+        await submitQuizResult({
+          body: {
+            quiz_id: quiz.id,
+            score: result.data.data.score,
+            answers: result.data.data.answers,
+          },
+        });
+
         router.push(`/modules/${params.id}/quiz/${params.sectionId}/results`);
       } else {
         console.error("Quiz evaluation failed:", result);
@@ -314,10 +307,7 @@ export default function QuizPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
         <p className="text-gray-500 mb-4">Quiz not found</p>
-        <button
-          onClick={handleExit}
-          className="text-blue-600 hover:underline"
-        >
+        <button onClick={handleExit} className="text-blue-600 hover:underline">
           Back to module
         </button>
       </div>

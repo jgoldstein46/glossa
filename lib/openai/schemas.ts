@@ -1,113 +1,125 @@
-import type { ResponseFormatJSONSchema } from 'openai/resources/shared'
+import type { ResponseFormatJSONSchema } from "openai/resources/shared";
 
 // Types for LLM-generated content (before database insertion)
 export interface GeneratedQuizQuestion {
-  question_text: string
-  input_type: 'text' | 'voice' | 'multiple_choice'
-  options?: string[]
-  correct_answer?: string
-  order_index: number
+  question_text: string;
+  input_type: "text" | "voice" | "multiple_choice";
+  options?: string[];
+  correct_answer?: string;
+  order_index: number;
 }
 
 export interface GeneratedQuiz {
-  title: string
-  questions: GeneratedQuizQuestion[]
+  title: string;
+  questions: GeneratedQuizQuestion[];
 }
 
 export interface GeneratedSection {
-  title: string
-  content: string
-  order_index: number
-  quiz: GeneratedQuiz
+  title: string;
+  content: string;
+  order_index: number;
+  quiz: GeneratedQuiz;
 }
 
 export interface GeneratedModule {
-  description: string
-  topic: string
-  difficulty: 'beginner' | 'intermediate' | 'advanced'
-  sections: GeneratedSection[]
+  description: string;
+  topic: string;
+  difficulty: "beginner" | "intermediate" | "advanced";
+  sections: GeneratedSection[];
 }
 
 // JSON Schema for OpenAI structured output
 export const moduleGenerationSchema: ResponseFormatJSONSchema = {
-  type: 'json_schema',
+  type: "json_schema",
   json_schema: {
-    name: 'module_generation',
+    name: "module_generation",
     strict: true,
     schema: {
-      type: 'object',
-      required: ['description', 'topic', 'difficulty', 'sections'],
+      type: "object",
+      required: ["description", "topic", "difficulty", "sections"],
       additionalProperties: false,
       properties: {
         description: {
-          type: 'string',
-          description: 'A concise description under 50 words: what the learner will understand and why it matters. Be direct and specific.',
+          type: "string",
+          description:
+            "A concise description under 50 words: what the learner will understand and why it matters. Be direct and specific.",
         },
         topic: {
-          type: 'string',
-          description: 'The main topic category (e.g., "Programming", "Mathematics", "Science")',
+          type: "string",
+          description:
+            'The main topic category (e.g., "Programming", "Mathematics", "Science")',
         },
         difficulty: {
-          type: 'string',
-          enum: ['beginner', 'intermediate', 'advanced'],
+          type: "string",
+          enum: ["beginner", "intermediate", "advanced"],
         },
         sections: {
-          type: 'array',
+          type: "array",
           minItems: 5,
           maxItems: 5,
           items: {
-            type: 'object',
-            required: ['title', 'content', 'order_index', 'quiz'],
+            type: "object",
+            required: ["title", "content", "order_index", "quiz"],
             additionalProperties: false,
             properties: {
               title: {
-                type: 'string',
-                description: 'A clear, concise section title',
+                type: "string",
+                description: "A clear, concise section title",
               },
               content: {
-                type: 'string',
-                description: 'Socratic educational content (~150-200 words, ~1 min read). Structure: Hook (provocative question/scenario) → Exploration (guide through concept with questions) → Core Insight (memorable aha moment) → Connection (real-world link). Use "you", analogies, rhetorical questions.',
+                type: "string",
+                description:
+                  'Socratic educational content (~150-200 words, ~1 min read). Structure: Hook (provocative question/scenario) → Exploration (guide through concept with questions) → Core Insight (memorable aha moment) → Connection (real-world link). Use "you", analogies, rhetorical questions.',
               },
               order_index: {
-                type: 'integer',
-                description: 'Zero-based index for section ordering',
+                type: "integer",
+                description: "Zero-based index for section ordering",
               },
               quiz: {
-                type: 'object',
-                required: ['title', 'questions'],
+                type: "object",
+                required: ["title", "questions"],
                 additionalProperties: false,
                 properties: {
                   title: {
-                    type: 'string',
+                    type: "string",
                     description: 'Quiz title, typically "Section N Quiz"',
                   },
                   questions: {
-                    type: 'array',
+                    type: "array",
                     items: {
-                      type: 'object',
-                      required: ['question_text', 'input_type', 'order_index', 'options', 'correct_answer'],
+                      type: "object",
+                      required: [
+                        "question_text",
+                        "input_type",
+                        "order_index",
+                        "options",
+                        "correct_answer",
+                      ],
                       additionalProperties: false,
                       properties: {
                         question_text: {
-                          type: 'string',
-                          description: 'The question to ask. Q1 (voice): open-ended reflection testing understanding. Q2 (MC): tests current section concept with plausible distractors. Q3 (MC): spaced repetition—callbacks to earlier sections or synthesis of multiple concepts.',
+                          type: "string",
+                          description:
+                            "The question to ask. Q1 (voice): open-ended reflection testing understanding. Q2 (MC): tests current section concept with plausible distractors. Q3 (MC): spaced repetition—callbacks to earlier sections or synthesis of multiple concepts.",
                         },
                         input_type: {
-                          type: 'string',
-                          enum: ['text', 'voice', 'multiple_choice'],
+                          type: "string",
+                          enum: ["text", "voice", "multiple_choice"],
                         },
                         options: {
-                          type: ['array', 'null'],
-                          items: { type: 'string' },
-                          description: 'For multiple_choice: exactly 4 short options (max 10 words each). Distractors should be plausible misconceptions. For voice questions, use null.',
+                          type: ["array", "null"],
+                          items: { type: "string" },
+                          description:
+                            "For multiple_choice: exactly 4 short options (max 10 words each). Distractors should be plausible misconceptions. For voice questions, use null.",
                         },
                         correct_answer: {
-                          type: ['string', 'null'],
-                          description: 'The correct answer. For multiple_choice, must match one of the options exactly. For voice questions, use null.',
+                          type: ["string", "null"],
+                          description:
+                            "The correct answer. For multiple_choice, must match one of the options exactly. For voice questions, use null.",
                         },
                         order_index: {
-                          type: 'integer',
-                          description: 'Zero-based index for question ordering',
+                          type: "integer",
+                          description: "Zero-based index for question ordering",
                         },
                       },
                     },
@@ -120,7 +132,7 @@ export const moduleGenerationSchema: ResponseFormatJSONSchema = {
       },
     },
   },
-}
+};
 
 export const SYSTEM_PROMPT = `You are a Socratic tutor and expert educational content creator. Your goal is to create engaging, adaptive learning experiences that help students truly understand and retain knowledge—not just memorize facts.
 
@@ -199,60 +211,62 @@ Write: "Imagine you're a chef preparing a complex dish. You don't dump all your 
 - Avoid special characters that could break JSON formatting
 - Each section should have exactly 3 quiz questions
 
-Remember: Your goal is not to transfer information, but to create understanding. Make learners think, question, and discover.`
+Remember: Your goal is not to transfer information, but to create understanding. Make learners think, question, and discover.`;
 
 // ============================================
 // Quiz Evaluation Types and Schema
 // ============================================
 
 export interface QuestionEvaluation {
-  question_id: string
-  score: number
-  is_correct: boolean
+  question_id: string;
+  score: number;
+  is_correct: boolean;
+  feedback: string;
 }
 
 export interface QuizEvaluationResult {
-  overall_score: number
-  feedback: string
-  question_evaluations: QuestionEvaluation[]
+  overall_score: number;
+  question_evaluations: QuestionEvaluation[];
 }
 
 export const quizEvaluationSchema: ResponseFormatJSONSchema = {
-  type: 'json_schema',
+  type: "json_schema",
   json_schema: {
-    name: 'quiz_evaluation',
+    name: "quiz_evaluation",
     strict: true,
     schema: {
-      type: 'object',
-      required: ['overall_score', 'feedback', 'question_evaluations'],
+      type: "object",
+      required: ["overall_score", "question_evaluations"],
       additionalProperties: false,
       properties: {
         overall_score: {
-          type: 'number',
-          description: 'Overall quiz score from 0-100',
-        },
-        feedback: {
-          type: 'string',
-          description: 'Brief 2-3 sentence feedback summarizing performance and key learning points',
+          type: "number",
+          description: "Overall quiz score from 0-100",
         },
         question_evaluations: {
-          type: 'array',
+          type: "array",
           items: {
-            type: 'object',
-            required: ['question_id', 'score', 'is_correct'],
+            type: "object",
+            required: ["question_id", "score", "is_correct", "feedback"],
             additionalProperties: false,
             properties: {
               question_id: {
-                type: 'string',
-                description: 'The ID of the question being evaluated',
+                type: "string",
+                description: "The ID of the question being evaluated",
               },
               score: {
-                type: 'number',
-                description: 'Score for this question (0-100)',
+                type: "number",
+                description: "Score for this question (0-100)",
               },
               is_correct: {
-                type: 'boolean',
-                description: 'Whether the answer meets the threshold for correctness (score >= 70)',
+                type: "boolean",
+                description:
+                  "Whether the answer meets the threshold for correctness (score >= 70)",
+              },
+              feedback: {
+                type: "string",
+                description:
+                  "Brief 2-3 sentence feedback summarizing performance and key learning points",
               },
             },
           },
@@ -260,4 +274,4 @@ export const quizEvaluationSchema: ResponseFormatJSONSchema = {
       },
     },
   },
-}
+};
