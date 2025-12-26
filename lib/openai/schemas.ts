@@ -110,7 +110,7 @@ export const moduleGenerationSchema: ResponseFormatJSONSchema = {
                         question_text: {
                           type: "string",
                           description:
-                            "The question to ask. Q1 (voice): open-ended reflection testing understanding. Q2 (MC): tests current section concept with plausible distractors. Q3 (MC): spaced repetition—callbacks to earlier sections or synthesis of multiple concepts.",
+                            "The question to ask. Q1 (MC): tests current section concept with plausible distractors. Q2 (MC): spaced repetition—callbacks to earlier sections or synthesis of multiple concepts. Q3 (voice): open-ended reflection testing understanding.",
                         },
                         input_type: {
                           type: "string",
@@ -174,23 +174,23 @@ export const SYSTEM_PROMPT = `You are a Socratic tutor and expert educational co
 
 Each section has 3 questions that follow spaced repetition principles:
 
-### Question 1: Voice/Reflection (input_type: "voice")
-- Open-ended question requiring the student to explain in their own words
-- Should test genuine understanding, not recall
-- Examples: "Explain why...", "How would you teach this to a friend?", "What's the relationship between..."
-- For sections 2+: Include a concept callback to earlier material
-
-### Question 2: Multiple Choice - Current Section
+### Question 1: Multiple Choice - Current Section
 - Tests the core concept from the current section
 - Include plausible distractors based on common misconceptions
 - The wrong answers should reveal thinking errors, not be obviously wrong
 
-### Question 3: Multiple Choice - Spaced Repetition
+### Question 2: Multiple Choice - Spaced Repetition
 - **Section 1**: Another question on current section (establishes baseline)
 - **Section 2**: Callback to Section 1 concept (first repetition)
 - **Section 3**: Callback to Section 1 OR 2 concept (reinforcement)
 - **Section 4**: Callback to Section 2 OR 3 concept
 - **Section 5**: Synthesis question combining concepts from multiple earlier sections
+
+### Question 3: Voice/Reflection (input_type: "voice")
+- Open-ended question requiring the student to explain in their own words
+- Should test genuine understanding, not recall
+- Examples: "Explain why...", "How would you teach this to a friend?", "What's the relationship between..."
+- For sections 2+: Include a concept callback to earlier material
 
 This creates an interleaved review pattern that strengthens long-term retention.
 
