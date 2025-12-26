@@ -1,16 +1,24 @@
-'use client'
+"use client";
 
-import { signout } from '@/app/login/actions'
+import { signout } from "@/app/login/actions";
+import { cn } from "@/lib/utils";
+import { ClassValue } from "clsx";
+import { Button } from "./ui/button";
 
-export default function LogoutButton() {
+export default function LogoutButton({
+  className,
+}: {
+  className?: ClassValue;
+}) {
   return (
     <form action={signout}>
-        <button 
-            type="submit"
-            className="text-sm font-semibold leading-6 text-gray-900 hover:text-gray-600"
-        >
-            Log out
-        </button>
+      <Button
+        type="submit"
+        variant="outline"
+        className={cn("text-sm font-semibold leading-6", className)}
+      >
+        Sign out
+      </Button>
     </form>
-  )
+  );
 }
