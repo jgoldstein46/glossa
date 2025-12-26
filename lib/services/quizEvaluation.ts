@@ -42,34 +42,24 @@ export async function evaluateQuiz(
     const { quiz, section, answers } = input;
 
     // Map answers to questions
-    const questionsWithResponses: QuestionForEvaluation[] = quiz.questions.map(
-      (q) => {
-        const answer = answers.find((a) => a.question_id === q.id);
-        return {
-          id: q.id,
-          question_text: q.question_text,
-          input_type: q.input_type,
-          correct_answer: q.correct_answer,
-          user_response: answer?.user_response ?? "",
-        };
-      },
-    );
+    const questionsWithResponses: QuestionForEvaluation[] =
+      filterQuestionsWithResponses(quiz, answers);
 
-    // Check if any voice/text questions exist
-    const hasOpenEndedQuestions = questionsWithResponses.some(
+    const openEndedQuestionsWithResponses = questionsWithResponses.filter(
       (q) => q.input_type === "voice" || q.input_type === "text",
     );
-
-    if (!hasOpenEndedQuestions) {
-      // All multiple choice - evaluate locally without LLM
-      return evaluateMultipleChoiceOnly(questionsWithResponses);
-    }
+    const multipleChoiceQuestions = questionsWithResponses.filter(
+      (q) => q.input_type === "multiple_choice",
+    );
+    const multipleChoiceQuestionsEvaluation = evaluateMultipleChoiceOnly(
+      multipleChoiceQuestions,
+    );
 
     // Build prompt and call OpenAI
     const prompt = buildEvaluationPrompt(
       section.content,
       section.title,
-      questionsWithResponses,
+      openEndedQuestionsWithResponses,
     );
 
     const response = await openai.chat.completions.create({
@@ -86,25 +76,35 @@ export async function evaluateQuiz(
       return { success: false, error: "No content in OpenAI response" };
     }
 
-    const evaluation: QuizEvaluationResult = JSON.parse(content);
+    const openEndedQuestionsEvaluation: QuizEvaluationResult =
+      JSON.parse(content);
 
     // Transform to QuizAnswer format
-    const evaluatedAnswers: QuizAnswer[] = evaluation.question_evaluations.map(
-      (qe) => ({
+    const openEndedEvaluatedAnswers: QuizAnswer[] =
+      openEndedQuestionsEvaluation.question_evaluations.map((qe) => ({
         question_id: qe.question_id,
         user_response:
           questionsWithResponses.find((q) => q.id === qe.question_id)
             ?.user_response ?? "",
         is_correct: qe.is_correct,
         feedback: qe.feedback,
-      }),
+      }));
+
+    const finalScore = Math.round(
+      openEndedQuestionsEvaluation.overall_score *
+        (openEndedQuestionsWithResponses.length / quiz.questions.length) +
+        multipleChoiceQuestionsEvaluation.result.score *
+          (multipleChoiceQuestions.length / quiz.questions.length),
     );
 
     return {
       success: true,
       result: {
-        score: Math.round(evaluation.overall_score),
-        answers: evaluatedAnswers,
+        score: finalScore,
+        answers: [
+          ...multipleChoiceQuestionsEvaluation.result.answers,
+          ...openEndedEvaluatedAnswers,
+        ],
       },
     };
   } catch (error) {
@@ -116,6 +116,22 @@ export async function evaluateQuiz(
   }
 }
 
+function filterQuestionsWithResponses(
+  quiz: Quiz,
+  answers: { question_id: string; user_response: string }[],
+): QuestionForEvaluation[] {
+  return quiz.questions.map((q) => {
+    const answer = answers.find((a) => a.question_id === q.id);
+    return {
+      id: q.id,
+      question_text: q.question_text,
+      input_type: q.input_type,
+      correct_answer: q.correct_answer,
+      user_response: answer?.user_response ?? "",
+    };
+  });
+}
+
 function evaluateMultipleChoiceOnly(
   questions: QuestionForEvaluation[],
 ): EvaluationSuccess {
@@ -123,6 +139,7 @@ function evaluateMultipleChoiceOnly(
     question_id: q.id,
     user_response: q.user_response,
     is_correct: q.user_response === q.correct_answer,
+    correct_answer: q.correct_answer,
     feedback: null,
   }));
 
