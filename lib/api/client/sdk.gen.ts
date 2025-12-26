@@ -542,7 +542,7 @@ export const getProgress = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     security: [{ scheme: "bearer", type: "http" }],
-    url: "/progress/{id}",
+    url: "/progress/{module_id}",
     ...options,
   });
 
@@ -558,7 +558,7 @@ export const updateProgress = <ThrowOnError extends boolean = false>(
     ThrowOnError
   >({
     security: [{ scheme: "bearer", type: "http" }],
-    url: "/progress/{id}",
+    url: "/progress/{module_id}",
     ...options,
     headers: {
       "Content-Type": "application/json",

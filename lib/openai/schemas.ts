@@ -17,6 +17,7 @@ export interface GeneratedQuiz {
 export interface GeneratedSection {
   title: string;
   content: string;
+  key_points: string[];
   order_index: number;
   quiz: GeneratedQuiz;
 }
@@ -59,7 +60,7 @@ export const moduleGenerationSchema: ResponseFormatJSONSchema = {
           maxItems: 5,
           items: {
             type: "object",
-            required: ["title", "content", "order_index", "quiz"],
+            required: ["title", "content", "key_points", "order_index", "quiz"],
             additionalProperties: false,
             properties: {
               title: {
@@ -70,6 +71,15 @@ export const moduleGenerationSchema: ResponseFormatJSONSchema = {
                 type: "string",
                 description:
                   'Socratic educational content (~150-200 words, ~1 min read). Structure: Hook (provocative question/scenario) → Exploration (guide through concept with questions) → Core Insight (memorable aha moment) → Connection (real-world link). Use "you", analogies, rhetorical questions.',
+              },
+              key_points: {
+                type: "array",
+                description:
+                  "One or two key points from the section that enhance memorability",
+                items: {
+                  type: "string",
+                  description: "A key point about the section",
+                },
               },
               order_index: {
                 type: "integer",
@@ -150,6 +160,7 @@ export const SYSTEM_PROMPT = `You are a Socratic tutor and expert educational co
 2. **Exploration**: Guide the learner through the concept using questions and examples
 3. **Core Insight**: Deliver the key understanding in a memorable way
 4. **Connection**: Link to real-world applications or the next concept
+5. **Key Points**: Recap one or two key points from the section to improve memorability
 
 ### Writing Style:
 - Use "you" and speak directly to the learner as a mentor would

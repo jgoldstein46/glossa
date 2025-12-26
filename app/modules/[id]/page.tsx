@@ -1,5 +1,7 @@
 "use client";
 
+import ModuleHeader from "@/components/module/module-header";
+import useModule from "@/hooks/module/use-module";
 import { fetchElevenLabsScribeToken } from "@/lib/actions/fetch-elevenlabs-scribe-token";
 import {
   getModule,
@@ -34,16 +36,11 @@ export default function ModuleDetailPage() {
   const params = useParams<{ id: string }>();
   const router = useRouter();
 
-  // Data states
-  const [module, setModule] = useState<Module | null>(null);
-  const [sections, setSections] = useState<Section[]>([]);
-  const [progress, setProgress] = useState<UserModuleProgress | null>(null);
   const [currentQuiz, setCurrentQuiz] = useState<Quiz | null>(null);
   const [scribeToken, setScribeToken] = useState<string | null>(null);
+  const { module, sections, progress, setProgress, isLoading } = useModule();
+  const currentSectionIndex = progress?.current_section_index || 0;
 
-  // UI states
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
   const [isContentExpanded, setIsContentExpanded] = useState(false);
 
   // Audio states
@@ -54,39 +51,6 @@ export default function ModuleDetailPage() {
   const [audioLoaded, setAudioLoaded] = useState(false);
 
   const currentSection = sections[currentSectionIndex];
-
-  // Load module data
-  useEffect(() => {
-    async function loadData() {
-      setIsLoading(true);
-
-      const [moduleResult, sectionsResult, progressResult] = await Promise.all([
-        getModule({ path: { id: params.id } }),
-        getModuleSections({ path: { id: params.id } }),
-        getProgress({ path: { id: params.id } }),
-      ]);
-
-      if (moduleResult.data?.success) {
-        setModule(moduleResult.data.data);
-      }
-
-      if (sectionsResult.data?.success) {
-        const sortedSections = [...sectionsResult.data.data].sort(
-          (a, b) => a.order_index - b.order_index,
-        );
-        setSections(sortedSections);
-      }
-
-      if (progressResult.data?.success) {
-        setProgress(progressResult.data.data);
-        setCurrentSectionIndex(progressResult.data.data.current_section_index);
-      }
-
-      setIsLoading(false);
-    }
-
-    loadData();
-  }, [params.id]);
 
   // Load scribe token for voice recording
   useEffect(() => {
@@ -164,7 +128,11 @@ export default function ModuleDetailPage() {
     if (result.data?.success) {
       setProgress(result.data.data);
     }
-  }, [params.id, progress]);
+  }, [params.id, progress, setProgress]);
+
+  useEffect(() => {
+    handleStartModule();
+  }, [handleStartModule]);
 
   // Navigate to section
   const goToSection = useCallback(
@@ -177,13 +145,12 @@ export default function ModuleDetailPage() {
         audioRef.current.pause();
       }
 
-      setCurrentSectionIndex(index);
       setIsContentExpanded(false);
 
       // Update progress if we have it
-      if (progress) {
+      if (currentSectionIndex !== undefined) {
         const result = await updateProgress({
-          path: { id: progress.id },
+          path: { module_id: params.id },
           body: { current_section_index: index },
         });
 
@@ -192,7 +159,7 @@ export default function ModuleDetailPage() {
         }
       }
     },
-    [sections.length, currentSectionIndex, progress],
+    [sections.length, params.id, currentSectionIndex, setProgress],
   );
 
   // Audio controls
@@ -258,24 +225,11 @@ export default function ModuleDetailPage() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center gap-3">
-          <Link
-            href="/home"
-            className="p-2 -ml-2 rounded-lg hover:bg-gray-100 transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5 text-gray-600" />
-          </Link>
-          <div className="flex-1 min-w-0">
-            <h1 className="font-semibold text-gray-900 truncate">
-              {module.title}
-            </h1>
-            <p className="text-sm text-gray-500">
-              Section {currentSectionIndex + 1} of {sections.length}
-            </p>
-          </div>
-        </div>
-      </header>
+      <ModuleHeader
+        moduleTitle={module.title}
+        totalSectionsCount={sections.length}
+        currentSectionIndex={currentSectionIndex}
+      />
 
       {/* Section Progress Dots */}
       <div className="bg-white border-b border-gray-200 px-4 py-3">

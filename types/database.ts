@@ -35,6 +35,7 @@ export interface Section {
   module_id: string;
   title: string;
   content: string;
+  key_points: string[];
   order_index: number;
   audio_url: string | null;
   created_at: string;

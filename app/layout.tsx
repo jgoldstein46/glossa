@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { createClient } from "@/utils/supabase/server";
 import { FlowgladProvider } from "@flowglad/nextjs";
 import "./globals.css";
+import { SupabaseProvider } from "@/components/supabase/supabase-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,9 +35,9 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <FlowgladProvider loadBilling={!!user}>
-          {children}
-        </FlowgladProvider>
+        <SupabaseProvider>
+          <FlowgladProvider loadBilling={!!user}>{children}</FlowgladProvider>
+        </SupabaseProvider>
       </body>
     </html>
   );

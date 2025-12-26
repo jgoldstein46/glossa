@@ -107,6 +107,7 @@ export async function generateModule(
           module_id: module.id,
           title: sectionData.title,
           content: sectionData.content,
+          key_points: sectionData.key_points,
           order_index: sectionData.order_index,
         })
         .select()

@@ -32,7 +32,7 @@ export default function Page() {
           results.data.data.map(async (mod) => {
             const userModuleProgressResult = await getProgress({
               path: {
-                id: mod.id,
+                module_id: mod.id,
               },
             });
             const progress = userModuleProgressResult.data?.success
