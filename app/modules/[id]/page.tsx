@@ -134,16 +134,19 @@ export default function ModuleDetailPage() {
     handleStartModule();
   }, [handleStartModule]);
 
+  const pauseAudio = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+  }, []);
+
   // Navigate to section
   const goToSection = useCallback(
     async (index: number) => {
       if (index < 0 || index >= sections.length) return;
       if (index === currentSectionIndex) return;
 
-      // Stop current audio
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
+      pauseAudio();
 
       setIsContentExpanded(false);
 
@@ -159,8 +162,22 @@ export default function ModuleDetailPage() {
         }
       }
     },
-    [sections.length, params.id, currentSectionIndex, setProgress],
+    [sections.length, params.id, currentSectionIndex, setProgress, pauseAudio],
   );
+
+  const goToRecap = useCallback(() => {
+    pauseAudio();
+    setIsContentExpanded(false);
+    router.push(`/modules/${params.id}/recap`);
+  }, [pauseAudio, router, setIsContentExpanded, params.id]);
+
+  const handleContinue = useCallback(() => {
+    if (currentSectionIndex < sections.length - 1) {
+      goToSection(currentSectionIndex + 1);
+    } else {
+      goToRecap();
+    }
+  }, [currentSectionIndex, goToSection, goToRecap, sections]);
 
   // Audio controls
   const toggleAudio = () => {
@@ -403,16 +420,16 @@ export default function ModuleDetailPage() {
           </span>
 
           <button
-            onClick={() => goToSection(currentSectionIndex + 1)}
-            disabled={currentSectionIndex === sections.length - 1}
-            className={clsx(
-              "flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors",
-              currentSectionIndex === sections.length - 1
-                ? "text-gray-300 cursor-not-allowed"
-                : "text-gray-700 hover:bg-gray-100",
-            )}
+            onClick={handleContinue}
+            className={
+              "flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors text-gray-700 hover:bg-gray-100"
+            }
           >
-            <span className="hidden sm:inline">Next</span>
+            <span className="hidden sm:inline">
+              {currentSectionIndex === sections.length - 1
+                ? "Go to Recap"
+                : "Next"}
+            </span>
             <ChevronRight className="w-5 h-5" />
           </button>
         </div>
