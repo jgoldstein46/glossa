@@ -8,6 +8,7 @@ import {
   QuizEvaluationAnswerInput,
   submitQuizResult,
 } from "@/lib/api/client";
+import { CommitStrategy } from "@elevenlabs/elevenlabs-js";
 import { useScribe } from "@elevenlabs/react";
 import clsx from "clsx";
 import { ArrowRight, Check, Loader2, Mic, Square, X } from "lucide-react";
@@ -16,62 +17,70 @@ import { useCallback, useEffect, useState } from "react";
 
 // Voice input component using ElevenLabs Scribe
 function VoiceInput({
-  token,
   value,
   onChange,
 }: {
-  token: string | null;
   value: string;
   onChange: (value: string) => void;
 }) {
-  const [showTextFallback, setShowTextFallback] = useState(!token);
+  const [showTextFallback, setShowTextFallback] = useState(false);
+
+  const [pendingCommittedText, setPendingCommittedText] = useState<
+    string | null
+  >(null);
 
   const scribe = useScribe({
     modelId: "scribe_v2_realtime",
-    onCommittedTranscript: (data) => {
-      // Append new transcript to existing value
-      const newValue = value ? `${value} ${data.text}` : data.text;
-      onChange(newValue);
+    commitStrategy: CommitStrategy.VAD,
+    onCommittedTranscript: (data: { text: string }) => {
+      setPendingCommittedText(data.text);
     },
   });
 
+  useEffect(() => {
+    if (!pendingCommittedText) return;
+
+    const newValue = value
+      ? `${value} ${pendingCommittedText}`
+      : pendingCommittedText;
+    onChange(newValue);
+    setPendingCommittedText(null);
+  }, [pendingCommittedText, onChange, value]);
+
   const handleToggleRecording = async () => {
     if (scribe.isConnected) {
+      setPendingCommittedText(scribe.partialTranscript);
       scribe.disconnect();
-    } else if (token) {
-      onChange(""); // Clear previous response
-      await scribe.connect({
-        token,
-        microphone: {
-          echoCancellation: true,
-          noiseSuppression: true,
-        },
-      });
+    } else {
+      const tokenResult = await fetchElevenLabsScribeToken();
+      if (tokenResult) {
+        await scribe.connect({
+          token: tokenResult.token,
+          microphone: {
+            echoCancellation: true,
+            noiseSuppression: true,
+          },
+        });
+      }
     }
   };
 
-  if (showTextFallback || !token) {
+  if (showTextFallback) {
     return (
       <div className="space-y-3">
-        {!token && (
-          <p className="text-sm text-amber-600">
-            Voice input unavailable. Please type your answer.
-          </p>
-        )}
         <textarea
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder="Type your answer here..."
-          className="w-full h-32 p-4 border border-gray-200 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full h-32 p-4 border border-gray-200 rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800"
         />
-        {token && (
-          <button
-            onClick={() => setShowTextFallback(false)}
-            className="text-sm text-blue-600 hover:underline"
-          >
-            Try voice input instead
-          </button>
-        )}
+
+        <button
+          onClick={() => setShowTextFallback(false)}
+          className="text-sm text-blue-600 hover:underline"
+        >
+          Try voice input instead
+        </button>
       </div>
     );
   }
@@ -194,7 +203,6 @@ export default function QuizPage() {
 
   // Data states
   const [quiz, setQuiz] = useState<Quiz | null>(null);
-  const [scribeToken, setScribeToken] = useState<string | null>(null);
 
   // Quiz state
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -205,9 +213,10 @@ export default function QuizPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const currentQuestion = quiz?.questions[currentQuestionIndex];
+  const currentQuestionId = currentQuestion?.id || 0;
   const totalQuestions = quiz?.questions.length || 0;
-  const currentAnswer = currentQuestion
-    ? answers[currentQuestion.id] || ""
+  const currentAnswer = currentQuestionId
+    ? answers[currentQuestionId] || ""
     : "";
   const isLastQuestion = currentQuestionIndex === totalQuestions - 1;
   const canProceed = currentAnswer.trim().length > 0;
@@ -217,9 +226,8 @@ export default function QuizPage() {
     async function loadQuiz() {
       setIsLoading(true);
 
-      const [quizResult, tokenResult] = await Promise.all([
+      const [quizResult] = await Promise.all([
         getSectionQuiz({ path: { id: params.sectionId } }),
-        fetchElevenLabsScribeToken(),
       ]);
 
       if (quizResult.data?.success) {
@@ -229,7 +237,6 @@ export default function QuizPage() {
         setQuiz(quizData);
       }
 
-      setScribeToken(tokenResult.token || null);
       setIsLoading(false);
     }
 
@@ -237,15 +244,16 @@ export default function QuizPage() {
   }, [params.sectionId]);
 
   // Update answer
+
   const updateAnswer = useCallback(
     (value: string) => {
-      if (!currentQuestion) return;
+      if (!currentQuestionId) return;
       setAnswers((prev) => ({
         ...prev,
-        [currentQuestion.id]: value,
+        [currentQuestionId]: value,
       }));
     },
-    [currentQuestion],
+    [currentQuestionId],
   );
 
   // Go to next question or submit
@@ -368,11 +376,7 @@ export default function QuizPage() {
                 onChange={updateAnswer}
               />
             ) : currentQuestion.input_type === "voice" ? (
-              <VoiceInput
-                token={scribeToken}
-                value={currentAnswer}
-                onChange={updateAnswer}
-              />
+              <VoiceInput value={currentAnswer} onChange={updateAnswer} />
             ) : (
               <TextInput value={currentAnswer} onChange={updateAnswer} />
             )}
