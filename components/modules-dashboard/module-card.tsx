@@ -10,6 +10,7 @@ import {
   Play,
   RotateCcw,
 } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 interface ModuleCardProps {
@@ -74,10 +75,11 @@ export default function ModuleCard({
       {/* Thumbnail */}
       {module.thumbnail_url ? (
         <div className="h-32 bg-gray-100 overflow-hidden">
-          <img
+          <Image
             src={module.thumbnail_url}
             alt={module.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full"
+            objectFit="cover"
           />
         </div>
       ) : (
@@ -99,7 +101,9 @@ export default function ModuleCard({
         </div>
 
         {/* Description */}
-        <p className="text-sm text-gray-600 line-clamp-2">{module.description}</p>
+        <p className="text-sm text-gray-600 line-clamp-2">
+          {module.description}
+        </p>
 
         {/* Badges */}
         <div className="flex flex-wrap gap-2">
@@ -109,7 +113,9 @@ export default function ModuleCard({
           <span
             className={clsx(
               "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize",
-              difficultyColors[module.difficulty as keyof typeof difficultyColors],
+              difficultyColors[
+                module.difficulty as keyof typeof difficultyColors
+              ],
             )}
           >
             {module.difficulty}
