@@ -58,8 +58,39 @@ export default function ModuleDetailPage() {
       const { token } = await fetchElevenLabsScribeToken();
       setScribeToken(token || null);
     }
-    loadScribeToken();
-  }, []);
+
+    loadGenerationStatus();
+
+    // Subscribe to realtime updates
+    const channel = supabase
+      .channel(`module_generation_status:${params.id}`, {
+        config: { private: true },
+      })
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "module_generation_status",
+          filter: `module_id=eq.${params.id}`,
+        },
+        (payload) => {
+          console.log(
+            "Got payload while listening to module generation status",
+            payload,
+          );
+          setGenerationStatus(payload.new as ModuleGenerationStatus);
+        },
+      )
+      .subscribe();
+
+    console.log("Subscribed to channel: ", channel);
+
+    return () => {
+      console.log("Cleaning up the channel", channel);
+      supabase.removeChannel(channel);
+    };
+  }, [params.id]);
 
   // Load quiz for current section
   useEffect(() => {
