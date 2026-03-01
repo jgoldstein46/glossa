@@ -1,10 +1,14 @@
 import { NextRequest } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { apiSuccess, apiError, apiPaginated } from "@/lib/api/response";
+import { requireAuth } from "@/lib/api/auth";
 
 // GET /api/progress - Get all module progress
 export async function GET(request: NextRequest) {
   try {
+    const { error: authError } = await requireAuth();
+    if (authError) return authError;
+
     const supabase = await createSupabaseServerClient();
     const { searchParams } = new URL(request.url);
 
@@ -42,8 +46,11 @@ export async function GET(request: NextRequest) {
 // POST /api/progress - Start a module
 export async function POST(request: NextRequest) {
   try {
+    const { user, error: authError } = await requireAuth();
+    if (authError) return authError;
+
     const supabase = await createSupabaseServerClient();
-    const userId = (await supabase.auth.getUser()).data.user!.id;
+    const userId = user.id;
     const body = await request.json();
 
     const { module_id } = body;

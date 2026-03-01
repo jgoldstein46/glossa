@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { apiSuccess, apiError } from "@/lib/api/response";
+import { requireAuth } from "@/lib/api/auth";
 import { evaluateQuiz } from "@/lib/services/quizEvaluation";
 import type { Quiz, Section, QuizQuestion } from "@/types/database";
 
@@ -11,6 +12,9 @@ interface QuizWithSection extends Quiz {
 // POST /api/quiz-results/evaluate - Evaluate quiz answers using LLM
 export async function POST(request: NextRequest) {
   try {
+    const { error: authError } = await requireAuth();
+    if (authError) return authError;
+
     const supabase = await createSupabaseServerClient();
     const body = await request.json();
 

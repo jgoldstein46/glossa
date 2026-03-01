@@ -1,15 +1,19 @@
 import { NextRequest } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { apiSuccess, apiError } from "@/lib/api/response";
+import { requireAuth } from "@/lib/api/auth";
 
 type RouteParams = { params: Promise<{ section_id: string }> };
 
 // GET /api/quiz-results/[section_id] - Get a single quiz with results for a section
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
+    const { user, error: authError } = await requireAuth();
+    if (authError) return authError;
+
     const { section_id } = await params;
     const supabase = await createSupabaseServerClient();
-    const userId = (await supabase.auth.getUser()).data.user!.id;
+    const userId = user.id;
 
     const { data, error } = await supabase
       .from("quizzes")

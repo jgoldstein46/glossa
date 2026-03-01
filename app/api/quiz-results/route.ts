@@ -1,16 +1,17 @@
 import { NextRequest } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { apiSuccess, apiError, apiPaginated } from "@/lib/api/response";
+import { requireAuth } from "@/lib/api/auth";
 
 async function getQuizResultsByModuleId(
   moduleId: string,
+  userId: string,
   config: {
     limit: number;
     offset: number;
   },
 ) {
   const supabase = await createSupabaseServerClient();
-  const userId = (await supabase.auth.getUser()).data.user!.id;
   // 1. Get all section IDs for the module
   const { data: sections, error: sectionsError } = await supabase
     .from("sections")
@@ -40,6 +41,9 @@ async function getQuizResultsByModuleId(
 // GET /api/quiz-results - Get all quiz results
 export async function GET(request: NextRequest) {
   try {
+    const { user, error: authError } = await requireAuth();
+    if (authError) return authError;
+
     const supabase = await createSupabaseServerClient();
     const { searchParams } = new URL(request.url);
 
@@ -50,7 +54,7 @@ export async function GET(request: NextRequest) {
     let data, error, count;
 
     if (moduleId) {
-      ({ data, error, count } = await getQuizResultsByModuleId(moduleId, {
+      ({ data, error, count } = await getQuizResultsByModuleId(moduleId, user.id, {
         offset,
         limit,
       }));
@@ -85,6 +89,9 @@ export async function GET(request: NextRequest) {
 // POST /api/quiz-results - Submit quiz result
 export async function POST(request: NextRequest) {
   try {
+    const { user, error: authError } = await requireAuth();
+    if (authError) return authError;
+
     const supabase = await createSupabaseServerClient();
     const body = await request.json();
 
@@ -106,7 +113,7 @@ export async function POST(request: NextRequest) {
       .from("quiz_results")
       .insert({
         quiz_id,
-        user_id: (await supabase.auth.getUser()).data.user!.id,
+        user_id: user.id,
         score,
         answers,
         completed_at: new Date().toISOString(),

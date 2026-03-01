@@ -1,12 +1,16 @@
 import { NextRequest } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { apiSuccess, apiError } from "@/lib/api/response";
+import { requireAuth } from "@/lib/api/auth";
 
 type RouteParams = { params: Promise<{ module_id: string }> };
 
 // GET /api/progress/[module_id] - Get single progress record
 export async function GET(request: NextRequest, { params }: RouteParams) {
   try {
+    const { user, error: authError } = await requireAuth();
+    if (authError) return authError;
+
     const { module_id } = await params;
     const supabase = await createSupabaseServerClient();
 
@@ -14,7 +18,7 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
       .from("user_module_progress")
       .select("*, module:modules(id, title, topic, difficulty, thumbnail_url)")
       .eq("module_id", module_id)
-      .eq("user_id", (await supabase.auth.getUser()).data.user!.id)
+      .eq("user_id", user.id)
       .single();
 
     if (error || !data) {
@@ -31,9 +35,12 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 // PATCH /api/progress/[id] - Update progress
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
+    const { user, error: authError } = await requireAuth();
+    if (authError) return authError;
+
     const { module_id } = await params;
     const supabase = await createSupabaseServerClient();
-    const userId = (await supabase.auth.getUser()).data.user!.id;
+    const userId = user.id;
     const body = await request.json();
 
     // Verify record exists
