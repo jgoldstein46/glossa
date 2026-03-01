@@ -1,7 +1,7 @@
-import { NextRequest } from 'next/server'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
-import { apiSuccess, apiError, apiPaginated } from '@/lib/api/response'
-import { generateModule } from '@/lib/services/moduleGeneration'
+import { NextRequest } from "next/server";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { apiSuccess, apiError, apiPaginated } from "@/lib/api/response";
+import { generateModule } from "@/lib/services/moduleGeneration";
 
 // GET /api/modules - List published modules (public)
 export async function GET(request: NextRequest) {
@@ -44,29 +44,37 @@ export async function GET(request: NextRequest) {
 // POST /api/modules - Generate module from title
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createSupabaseServerClient()
-    const body = await request.json()
+    const supabase = await createSupabaseServerClient();
+    const body = await request.json();
 
-    const { title, language } = body
-    if (!title || typeof title !== 'string' || title.trim().length === 0) {
-      return apiError('Missing required field: title', 400)
+    const { title, language } = body;
+    if (!title || typeof title !== "string" || title.trim().length === 0) {
+      return apiError("Missing required field: title", 400);
     }
 
-    const moduleLanguage = typeof language === 'string' && language.trim().length > 0
-      ? language.trim()
-      : 'English'
+    const moduleLanguage =
+      typeof language === "string" && language.trim().length > 0 ? language.trim() : "English";
 
-    const result = await generateModule(supabase, title.trim(), moduleLanguage)
+    const result = await generateModule(
+      {
+        title: title.trim(),
+        language: moduleLanguage,
+      },
+      supabase,
+    );
 
     if (!result.success) {
-      return apiError(result.error, 500, result.details)
+      return apiError(result.error, 500, result.details);
     }
 
-    return apiSuccess({
-      module: result.module,
-      sections: result.sections,
-      quizzes: result.quizzes,
-    }, 201)
+    return apiSuccess(
+      {
+        module: result.module,
+        sections: result.sections,
+        quizzes: result.quizzes,
+      },
+      201,
+    );
   } catch {
     return apiError("Internal server error", 500);
   }

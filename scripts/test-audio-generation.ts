@@ -22,7 +22,14 @@ async function main() {
 
   const startTime = Date.now();
 
-  const result = await generateModule(supabase, title, language);
+  const result = await generateModule(
+    {
+      title,
+      language,
+      creatorId: "203435d6-0aef-430c-9af7-9aae9f9c535c",
+    },
+    supabase,
+  );
 
   const elapsed = ((Date.now() - startTime) / 1000).toFixed(2);
 
@@ -43,9 +50,7 @@ async function main() {
   console.log("\nSections:");
   for (const section of result.sections) {
     const audioStatus = section.audio_url ? "🔊 Audio" : "❌ No audio";
-    console.log(
-      `  ${section.order_index + 1}. ${section.title} [${audioStatus}]`,
-    );
+    console.log(`  ${section.order_index + 1}. ${section.title} [${audioStatus}]`);
     if (section.audio_url) {
       console.log(`     ${section.audio_url}`);
     }
