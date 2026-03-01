@@ -12,7 +12,7 @@ export async function proxy(request: NextRequest) {
 }
 
 function pathIsPublic(pathname: string) {
-  const publicPaths = ["/", "/login"];
+  const publicPaths = ["/login", "/auth/callback"];
   for (const publicPath of publicPaths) {
     if (pathname === publicPath) {
       return true;
@@ -25,5 +25,5 @@ function pathIsPublic(pathname: string) {
 // export default function proxy(request: NextRequest) { ... }
 
 export const config = {
-  matcher: "/((?!api|_next/static|_next/image|.*\\.png$).*)",
+  matcher: "/((?!api|_next/static|_next/image|.*\\.(?:png|svg|ico)$).*)",
 };
