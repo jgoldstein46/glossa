@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { apiSuccess, apiError } from "@/lib/api/response";
+import { requireAuth } from "@/lib/api/auth";
 
 type RouteParams = { params: Promise<{ id: string }> };
 
@@ -26,6 +27,9 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 // PATCH /api/modules/[id] - Update module
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
+    const { error: authError } = await requireAuth();
+    if (authError) return authError;
+
     const { id } = await params;
     const supabase = await createSupabaseServerClient();
     const body = await request.json();
@@ -82,6 +86,9 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
 // DELETE /api/modules/[id] - Delete module
 export async function DELETE(request: NextRequest, { params }: RouteParams) {
   try {
+    const { error: authError } = await requireAuth();
+    if (authError) return authError;
+
     const { id } = await params;
     const supabase = await createSupabaseServerClient();
 

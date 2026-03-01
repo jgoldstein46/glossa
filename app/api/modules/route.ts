@@ -2,6 +2,7 @@ import { NextRequest } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { apiSuccess, apiError, apiPaginated } from "@/lib/api/response";
 import { generateModule } from "@/lib/services/moduleGeneration";
+import { requireAuth } from "@/lib/api/auth";
 
 // GET /api/modules - List published modules (public)
 export async function GET(request: NextRequest) {
@@ -44,6 +45,9 @@ export async function GET(request: NextRequest) {
 // POST /api/modules - Generate module from title
 export async function POST(request: NextRequest) {
   try {
+    const { user, error: authError } = await requireAuth();
+    if (authError) return authError;
+
     const supabase = await createSupabaseServerClient();
     const body = await request.json();
 
@@ -59,6 +63,7 @@ export async function POST(request: NextRequest) {
       {
         title: title.trim(),
         language: moduleLanguage,
+        creatorId: user.id,
       },
       supabase,
     );

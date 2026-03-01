@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createSupabaseServerClient as createClient } from "@/lib/supabase/server";
 import { regenerateModuleAudio } from "@/lib/services/moduleGeneration";
+import { requireAuth } from "@/lib/api/auth";
 
 export async function POST(request: NextRequest) {
   try {
+    const { error: authError } = await requireAuth();
+    if (authError) return authError;
+
     const supabase = await createClient();
     const { moduleId } = await request.json();
 

@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateModule } from "@/lib/services/moduleGeneration";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { requireAuth } from "@/lib/api/auth";
 
 export async function POST(request: NextRequest) {
   try {
+    const { error: authError } = await requireAuth();
+    if (authError) return authError;
+
     const supabase = await createSupabaseServerClient();
     const { moduleId, title, language } = await request.json();
 
