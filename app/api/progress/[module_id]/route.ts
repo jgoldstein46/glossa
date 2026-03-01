@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { apiSuccess, apiError } from "@/lib/api/response";
 
-type RouteParams = { params: Promise<{ id: string }> };
+type RouteParams = { params: Promise<{ module_id: string }> };
 
 // GET /api/progress/[module_id] - Get single progress record
 export async function GET(request: NextRequest, { params }: RouteParams) {
