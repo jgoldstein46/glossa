@@ -1,7 +1,7 @@
 "use client";
 
-import LogoutButton from "@/components/LogoutButton";
 import ModuleCard from "@/components/modules-dashboard/module-card";
+import { CreateModuleDialog } from "@/components/module/create-module-dialog";
 import {
   getProgress,
   listModules,
@@ -19,9 +19,7 @@ interface ModuleWithProgress {
 }
 
 export default function Page() {
-  const [modules, setModules] = useState<ModuleWithProgress[] | undefined>(
-    undefined,
-  );
+  const [modules, setModules] = useState<ModuleWithProgress[] | undefined>(undefined);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -48,10 +46,7 @@ export default function Page() {
         );
         setModules(resultsWithProgress);
       } else {
-        console.error(
-          "Got error while fetching modules: ",
-          JSON.stringify(results),
-        );
+        console.error("Got error while fetching modules: ", JSON.stringify(results));
       }
       setIsLoading(false);
     };
@@ -65,7 +60,7 @@ export default function Page() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex">
           <h1 className="text-2xl font-bold text-gray-900">Your Modules</h1>
           <div className="ml-auto">
-            <LogoutButton />
+            <CreateModuleDialog />
           </div>
         </div>
       </div>
