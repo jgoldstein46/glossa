@@ -1,8 +1,5 @@
 import { openai, MODEL_ID } from "@/lib/openai/client";
-import {
-  quizEvaluationSchema,
-  QuizEvaluationResult,
-} from "@/lib/openai/schemas";
+import { quizEvaluationSchema, QuizEvaluationResult } from "@/lib/openai/schemas";
 import {
   EVALUATION_SYSTEM_PROMPT,
   buildEvaluationPrompt,
@@ -35,15 +32,15 @@ interface EvaluationError {
 
 export type EvaluationOutput = EvaluationSuccess | EvaluationError;
 
-export async function evaluateQuiz(
-  input: EvaluationInput,
-): Promise<EvaluationOutput> {
+export async function evaluateQuiz(input: EvaluationInput): Promise<EvaluationOutput> {
   try {
     const { quiz, section, answers } = input;
 
     // Map answers to questions
-    const questionsWithResponses: QuestionForEvaluation[] =
-      filterQuestionsWithResponses(quiz, answers);
+    const questionsWithResponses: QuestionForEvaluation[] = filterQuestionsWithResponses(
+      quiz,
+      answers,
+    );
 
     const openEndedQuestionsWithResponses = questionsWithResponses.filter(
       (q) => q.input_type === "voice" || q.input_type === "text",
@@ -51,9 +48,7 @@ export async function evaluateQuiz(
     const multipleChoiceQuestions = questionsWithResponses.filter(
       (q) => q.input_type === "multiple_choice",
     );
-    const multipleChoiceQuestionsEvaluation = evaluateMultipleChoiceOnly(
-      multipleChoiceQuestions,
-    );
+    const multipleChoiceQuestionsEvaluation = evaluateMultipleChoiceOnly(multipleChoiceQuestions);
 
     // Build prompt and call OpenAI
     const prompt = buildEvaluationPrompt(
@@ -76,16 +71,14 @@ export async function evaluateQuiz(
       return { success: false, error: "No content in OpenAI response" };
     }
 
-    const openEndedQuestionsEvaluation: QuizEvaluationResult =
-      JSON.parse(content);
+    const openEndedQuestionsEvaluation: QuizEvaluationResult = JSON.parse(content);
 
     // Transform to QuizAnswer format
     const openEndedEvaluatedAnswers: QuizAnswer[] =
       openEndedQuestionsEvaluation.question_evaluations.map((qe) => ({
         question_id: qe.question_id,
         user_response:
-          questionsWithResponses.find((q) => q.id === qe.question_id)
-            ?.user_response ?? "",
+          questionsWithResponses.find((q) => q.id === qe.question_id)?.user_response ?? "",
         is_correct: qe.is_correct,
         feedback: qe.feedback,
       }));
@@ -132,9 +125,7 @@ function filterQuestionsWithResponses(
   });
 }
 
-function evaluateMultipleChoiceOnly(
-  questions: QuestionForEvaluation[],
-): EvaluationSuccess {
+function evaluateMultipleChoiceOnly(questions: QuestionForEvaluation[]): EvaluationSuccess {
   const results: QuizAnswer[] = questions.map((q) => ({
     question_id: q.id,
     user_response: q.user_response,

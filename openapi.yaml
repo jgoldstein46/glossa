@@ -66,7 +66,7 @@ components:
         topic:
           type: string
         difficulty:
-          $ref: '#/components/schemas/Difficulty'
+          $ref: "#/components/schemas/Difficulty"
         estimated_duration_mins:
           type: integer
         thumbnail_url:
@@ -80,7 +80,18 @@ components:
         updated_at:
           type: string
           format: date-time
-      required: [id, title, description, topic, difficulty, estimated_duration_mins, is_published, created_at, updated_at]
+      required:
+        [
+          id,
+          title,
+          description,
+          topic,
+          difficulty,
+          estimated_duration_mins,
+          is_published,
+          created_at,
+          updated_at,
+        ]
 
     Section:
       type: object
@@ -117,7 +128,7 @@ components:
         question_text:
           type: string
         input_type:
-          $ref: '#/components/schemas/QuestionInputType'
+          $ref: "#/components/schemas/QuestionInputType"
         options:
           type: array
           items:
@@ -142,7 +153,7 @@ components:
         questions:
           type: array
           items:
-            $ref: '#/components/schemas/QuizQuestion'
+            $ref: "#/components/schemas/QuizQuestion"
         created_at:
           type: string
           format: date-time
@@ -183,7 +194,7 @@ components:
         answers:
           type: array
           items:
-            $ref: '#/components/schemas/QuizAnswer'
+            $ref: "#/components/schemas/QuizAnswer"
         completed_at:
           type: string
           format: date-time
@@ -205,7 +216,7 @@ components:
           type: string
           format: uuid
         status:
-          $ref: '#/components/schemas/ProgressStatus'
+          $ref: "#/components/schemas/ProgressStatus"
         current_section_index:
           type: integer
         started_at:
@@ -255,7 +266,7 @@ components:
         topic:
           type: string
         difficulty:
-          $ref: '#/components/schemas/Difficulty'
+          $ref: "#/components/schemas/Difficulty"
         estimated_duration_mins:
           type: integer
           default: 5
@@ -276,7 +287,7 @@ components:
         topic:
           type: string
         difficulty:
-          $ref: '#/components/schemas/Difficulty'
+          $ref: "#/components/schemas/Difficulty"
         estimated_duration_mins:
           type: integer
         thumbnail_url:
@@ -319,7 +330,7 @@ components:
         questions:
           type: array
           items:
-            $ref: '#/components/schemas/QuizQuestion'
+            $ref: "#/components/schemas/QuizQuestion"
           default: []
       required: [section_id, title]
 
@@ -331,7 +342,7 @@ components:
         questions:
           type: array
           items:
-            $ref: '#/components/schemas/QuizQuestion'
+            $ref: "#/components/schemas/QuizQuestion"
 
     ProfileUpdate:
       type: object
@@ -354,7 +365,7 @@ components:
         answers:
           type: array
           items:
-            $ref: '#/components/schemas/QuizAnswer'
+            $ref: "#/components/schemas/QuizAnswer"
       required: [quiz_id, score, answers]
 
     ProgressCreate:
@@ -369,7 +380,7 @@ components:
       type: object
       properties:
         status:
-          $ref: '#/components/schemas/ProgressStatus'
+          $ref: "#/components/schemas/ProgressStatus"
         current_section_index:
           type: integer
         completed_at:
@@ -396,7 +407,7 @@ components:
         answers:
           type: array
           items:
-            $ref: '#/components/schemas/QuizEvaluationAnswerInput'
+            $ref: "#/components/schemas/QuizEvaluationAnswerInput"
       required: [quiz_id, answers]
 
     QuizEvaluationResponse:
@@ -411,7 +422,7 @@ components:
         answers:
           type: array
           items:
-            $ref: '#/components/schemas/QuizAnswer'
+            $ref: "#/components/schemas/QuizAnswer"
       required: [score, feedback, answers]
 
 paths:
@@ -429,7 +440,7 @@ paths:
         - name: difficulty
           in: query
           schema:
-            $ref: '#/components/schemas/Difficulty'
+            $ref: "#/components/schemas/Difficulty"
         - name: limit
           in: query
           schema:
@@ -441,7 +452,7 @@ paths:
             type: integer
             default: 0
       responses:
-        '200':
+        "200":
           description: List of modules
           content:
             application/json:
@@ -454,16 +465,16 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Module'
+                      $ref: "#/components/schemas/Module"
                   pagination:
-                    $ref: '#/components/schemas/Pagination'
+                    $ref: "#/components/schemas/Pagination"
                 required: [success, data, pagination]
-        '500':
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
     post:
       operationId: createModule
@@ -476,9 +487,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ModuleCreate'
+              $ref: "#/components/schemas/ModuleCreate"
       responses:
-        '201':
+        "201":
           description: Module created
           content:
             application/json:
@@ -489,20 +500,20 @@ paths:
                     type: boolean
                     const: true
                   data:
-                    $ref: '#/components/schemas/Module'
+                    $ref: "#/components/schemas/Module"
                 required: [success, data]
-        '400':
+        "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '401':
+                $ref: "#/components/schemas/ApiError"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
   /modules/{id}:
     get:
@@ -517,7 +528,7 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: Module details
           content:
             application/json:
@@ -528,14 +539,14 @@ paths:
                     type: boolean
                     const: true
                   data:
-                    $ref: '#/components/schemas/Module'
+                    $ref: "#/components/schemas/Module"
                 required: [success, data]
-        '404':
+        "404":
           description: Module not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
     patch:
       operationId: updateModule
@@ -555,9 +566,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ModuleUpdate'
+              $ref: "#/components/schemas/ModuleUpdate"
       responses:
-        '200':
+        "200":
           description: Module updated
           content:
             application/json:
@@ -568,26 +579,26 @@ paths:
                     type: boolean
                     const: true
                   data:
-                    $ref: '#/components/schemas/Module'
+                    $ref: "#/components/schemas/Module"
                 required: [success, data]
-        '400':
+        "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '401':
+                $ref: "#/components/schemas/ApiError"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '404':
+                $ref: "#/components/schemas/ApiError"
+        "404":
           description: Module not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
     delete:
       operationId: deleteModule
@@ -603,20 +614,20 @@ paths:
             type: string
             format: uuid
       responses:
-        '204':
+        "204":
           description: Module deleted
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '500':
+                $ref: "#/components/schemas/ApiError"
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
   /modules/{id}/sections:
     get:
@@ -631,7 +642,7 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: List of sections
           content:
             application/json:
@@ -644,14 +655,14 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Section'
+                      $ref: "#/components/schemas/Section"
                 required: [success, data]
-        '404':
+        "404":
           description: Module not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
   # Sections
   /sections:
@@ -676,7 +687,7 @@ paths:
             type: integer
             default: 0
       responses:
-        '200':
+        "200":
           description: List of sections
           content:
             application/json:
@@ -689,16 +700,16 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Section'
+                      $ref: "#/components/schemas/Section"
                   pagination:
-                    $ref: '#/components/schemas/Pagination'
+                    $ref: "#/components/schemas/Pagination"
                 required: [success, data, pagination]
-        '500':
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
     post:
       operationId: createSection
@@ -711,9 +722,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SectionCreate'
+              $ref: "#/components/schemas/SectionCreate"
       responses:
-        '201':
+        "201":
           description: Section created
           content:
             application/json:
@@ -724,26 +735,26 @@ paths:
                     type: boolean
                     const: true
                   data:
-                    $ref: '#/components/schemas/Section'
+                    $ref: "#/components/schemas/Section"
                 required: [success, data]
-        '400':
+        "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '401':
+                $ref: "#/components/schemas/ApiError"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '409':
+                $ref: "#/components/schemas/ApiError"
+        "409":
           description: Conflict (duplicate order_index)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
   /sections/{id}:
     get:
@@ -758,7 +769,7 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: Section details
           content:
             application/json:
@@ -769,14 +780,14 @@ paths:
                     type: boolean
                     const: true
                   data:
-                    $ref: '#/components/schemas/Section'
+                    $ref: "#/components/schemas/Section"
                 required: [success, data]
-        '404':
+        "404":
           description: Section not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
     patch:
       operationId: updateSection
@@ -796,9 +807,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SectionUpdate'
+              $ref: "#/components/schemas/SectionUpdate"
       responses:
-        '200':
+        "200":
           description: Section updated
           content:
             application/json:
@@ -809,32 +820,32 @@ paths:
                     type: boolean
                     const: true
                   data:
-                    $ref: '#/components/schemas/Section'
+                    $ref: "#/components/schemas/Section"
                 required: [success, data]
-        '400':
+        "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '401':
+                $ref: "#/components/schemas/ApiError"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '404':
+                $ref: "#/components/schemas/ApiError"
+        "404":
           description: Section not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '409':
+                $ref: "#/components/schemas/ApiError"
+        "409":
           description: Conflict (duplicate order_index)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
     delete:
       operationId: deleteSection
@@ -850,20 +861,20 @@ paths:
             type: string
             format: uuid
       responses:
-        '204':
+        "204":
           description: Section deleted
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '500':
+                $ref: "#/components/schemas/ApiError"
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
   /sections/{id}/quiz:
     get:
@@ -878,7 +889,7 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: Quiz details
           content:
             application/json:
@@ -889,14 +900,14 @@ paths:
                     type: boolean
                     const: true
                   data:
-                    $ref: '#/components/schemas/Quiz'
+                    $ref: "#/components/schemas/Quiz"
                 required: [success, data]
-        '404':
+        "404":
           description: Section or quiz not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
   # Quizzes
   /quizzes:
@@ -921,7 +932,7 @@ paths:
             type: integer
             default: 0
       responses:
-        '200':
+        "200":
           description: List of quizzes
           content:
             application/json:
@@ -934,16 +945,16 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/Quiz'
+                      $ref: "#/components/schemas/Quiz"
                   pagination:
-                    $ref: '#/components/schemas/Pagination'
+                    $ref: "#/components/schemas/Pagination"
                 required: [success, data, pagination]
-        '500':
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
     post:
       operationId: createQuiz
@@ -956,9 +967,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QuizCreate'
+              $ref: "#/components/schemas/QuizCreate"
       responses:
-        '201':
+        "201":
           description: Quiz created
           content:
             application/json:
@@ -969,26 +980,26 @@ paths:
                     type: boolean
                     const: true
                   data:
-                    $ref: '#/components/schemas/Quiz'
+                    $ref: "#/components/schemas/Quiz"
                 required: [success, data]
-        '400':
+        "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '401':
+                $ref: "#/components/schemas/ApiError"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '409':
+                $ref: "#/components/schemas/ApiError"
+        "409":
           description: Quiz already exists for this section
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
   /quizzes/{id}:
     get:
@@ -1003,7 +1014,7 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: Quiz details
           content:
             application/json:
@@ -1014,14 +1025,14 @@ paths:
                     type: boolean
                     const: true
                   data:
-                    $ref: '#/components/schemas/Quiz'
+                    $ref: "#/components/schemas/Quiz"
                 required: [success, data]
-        '404':
+        "404":
           description: Quiz not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
     patch:
       operationId: updateQuiz
@@ -1041,9 +1052,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QuizUpdate'
+              $ref: "#/components/schemas/QuizUpdate"
       responses:
-        '200':
+        "200":
           description: Quiz updated
           content:
             application/json:
@@ -1054,26 +1065,26 @@ paths:
                     type: boolean
                     const: true
                   data:
-                    $ref: '#/components/schemas/Quiz'
+                    $ref: "#/components/schemas/Quiz"
                 required: [success, data]
-        '400':
+        "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '401':
+                $ref: "#/components/schemas/ApiError"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '404':
+                $ref: "#/components/schemas/ApiError"
+        "404":
           description: Quiz not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
     delete:
       operationId: deleteQuiz
@@ -1089,20 +1100,20 @@ paths:
             type: string
             format: uuid
       responses:
-        '204':
+        "204":
           description: Quiz deleted
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '500':
+                $ref: "#/components/schemas/ApiError"
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
   # Profiles
   /profiles:
@@ -1113,7 +1124,7 @@ paths:
       security:
         - bearerAuth: []
       responses:
-        '200':
+        "200":
           description: Profile details
           content:
             application/json:
@@ -1124,20 +1135,20 @@ paths:
                     type: boolean
                     const: true
                   data:
-                    $ref: '#/components/schemas/Profile'
+                    $ref: "#/components/schemas/Profile"
                 required: [success, data]
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '404':
+                $ref: "#/components/schemas/ApiError"
+        "404":
           description: Profile not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
   /profiles/{id}:
     get:
@@ -1154,7 +1165,7 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: Profile details
           content:
             application/json:
@@ -1165,26 +1176,26 @@ paths:
                     type: boolean
                     const: true
                   data:
-                    $ref: '#/components/schemas/Profile'
+                    $ref: "#/components/schemas/Profile"
                 required: [success, data]
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '403':
+                $ref: "#/components/schemas/ApiError"
+        "403":
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '404':
+                $ref: "#/components/schemas/ApiError"
+        "404":
           description: Profile not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
     patch:
       operationId: updateProfile
@@ -1204,9 +1215,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProfileUpdate'
+              $ref: "#/components/schemas/ProfileUpdate"
       responses:
-        '200':
+        "200":
           description: Profile updated
           content:
             application/json:
@@ -1217,32 +1228,32 @@ paths:
                     type: boolean
                     const: true
                   data:
-                    $ref: '#/components/schemas/Profile'
+                    $ref: "#/components/schemas/Profile"
                 required: [success, data]
-        '400':
+        "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '401':
+                $ref: "#/components/schemas/ApiError"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '403':
+                $ref: "#/components/schemas/ApiError"
+        "403":
           description: Forbidden
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '404':
+                $ref: "#/components/schemas/ApiError"
+        "404":
           description: Profile not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
   # Quiz Results
   /quiz-results:
@@ -1269,7 +1280,7 @@ paths:
             type: integer
             default: 0
       responses:
-        '200':
+        "200":
           description: List of quiz results
           content:
             application/json:
@@ -1282,22 +1293,22 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/QuizResult'
+                      $ref: "#/components/schemas/QuizResult"
                   pagination:
-                    $ref: '#/components/schemas/Pagination'
+                    $ref: "#/components/schemas/Pagination"
                 required: [success, data, pagination]
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '500':
+                $ref: "#/components/schemas/ApiError"
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
     post:
       operationId: submitQuizResult
@@ -1310,9 +1321,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QuizResultCreate'
+              $ref: "#/components/schemas/QuizResultCreate"
       responses:
-        '201':
+        "201":
           description: Quiz result submitted
           content:
             application/json:
@@ -1323,20 +1334,20 @@ paths:
                     type: boolean
                     const: true
                   data:
-                    $ref: '#/components/schemas/QuizResult'
+                    $ref: "#/components/schemas/QuizResult"
                 required: [success, data]
-        '400':
+        "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '401':
+                $ref: "#/components/schemas/ApiError"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
   /quiz-results/{id}:
     get:
@@ -1353,7 +1364,7 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: Quiz result details
           content:
             application/json:
@@ -1364,20 +1375,20 @@ paths:
                     type: boolean
                     const: true
                   data:
-                    $ref: '#/components/schemas/QuizResult'
+                    $ref: "#/components/schemas/QuizResult"
                 required: [success, data]
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '404':
+                $ref: "#/components/schemas/ApiError"
+        "404":
           description: Quiz result not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
   /quiz-results/evaluate:
     post:
@@ -1392,9 +1403,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/QuizEvaluationRequest'
+              $ref: "#/components/schemas/QuizEvaluationRequest"
       responses:
-        '200':
+        "200":
           description: Evaluation result with score and feedback
           content:
             application/json:
@@ -1405,32 +1416,32 @@ paths:
                     type: boolean
                     const: true
                   data:
-                    $ref: '#/components/schemas/QuizEvaluationResponse'
+                    $ref: "#/components/schemas/QuizEvaluationResponse"
                 required: [success, data]
-        '400':
+        "400":
           description: Invalid input (missing fields or answers)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '401':
+                $ref: "#/components/schemas/ApiError"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '404':
+                $ref: "#/components/schemas/ApiError"
+        "404":
           description: Quiz not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '500':
+                $ref: "#/components/schemas/ApiError"
+        "500":
           description: Evaluation failed
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
   # Progress
   /progress:
@@ -1449,7 +1460,7 @@ paths:
         - name: status
           in: query
           schema:
-            $ref: '#/components/schemas/ProgressStatus'
+            $ref: "#/components/schemas/ProgressStatus"
         - name: limit
           in: query
           schema:
@@ -1461,7 +1472,7 @@ paths:
             type: integer
             default: 0
       responses:
-        '200':
+        "200":
           description: List of progress records
           content:
             application/json:
@@ -1474,22 +1485,22 @@ paths:
                   data:
                     type: array
                     items:
-                      $ref: '#/components/schemas/UserModuleProgress'
+                      $ref: "#/components/schemas/UserModuleProgress"
                   pagination:
-                    $ref: '#/components/schemas/Pagination'
+                    $ref: "#/components/schemas/Pagination"
                 required: [success, data, pagination]
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '500':
+                $ref: "#/components/schemas/ApiError"
+        "500":
           description: Server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
     post:
       operationId: startModule
@@ -1502,9 +1513,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProgressCreate'
+              $ref: "#/components/schemas/ProgressCreate"
       responses:
-        '201':
+        "201":
           description: Progress created
           content:
             application/json:
@@ -1515,26 +1526,26 @@ paths:
                     type: boolean
                     const: true
                   data:
-                    $ref: '#/components/schemas/UserModuleProgress'
+                    $ref: "#/components/schemas/UserModuleProgress"
                 required: [success, data]
-        '400':
+        "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '401':
+                $ref: "#/components/schemas/ApiError"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '409':
+                $ref: "#/components/schemas/ApiError"
+        "409":
           description: Progress already exists
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
   /progress/{id}:
     get:
@@ -1551,7 +1562,7 @@ paths:
             type: string
             format: uuid
       responses:
-        '200':
+        "200":
           description: Progress details
           content:
             application/json:
@@ -1562,20 +1573,20 @@ paths:
                     type: boolean
                     const: true
                   data:
-                    $ref: '#/components/schemas/UserModuleProgress'
+                    $ref: "#/components/schemas/UserModuleProgress"
                 required: [success, data]
-        '401':
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '404':
+                $ref: "#/components/schemas/ApiError"
+        "404":
           description: Progress not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
 
     patch:
       operationId: updateProgress
@@ -1595,9 +1606,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ProgressUpdate'
+              $ref: "#/components/schemas/ProgressUpdate"
       responses:
-        '200':
+        "200":
           description: Progress updated
           content:
             application/json:
@@ -1608,23 +1619,23 @@ paths:
                     type: boolean
                     const: true
                   data:
-                    $ref: '#/components/schemas/UserModuleProgress'
+                    $ref: "#/components/schemas/UserModuleProgress"
                 required: [success, data]
-        '400':
+        "400":
           description: Invalid input
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '401':
+                $ref: "#/components/schemas/ApiError"
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '404':
+                $ref: "#/components/schemas/ApiError"
+        "404":
           description: Progress not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"

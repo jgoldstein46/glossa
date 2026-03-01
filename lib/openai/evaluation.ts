@@ -23,36 +23,36 @@ Evaluate based on:
 - Keep feedback to 2-3 sentences
 - Acknowledge what the student did well
 - Briefly mention one area for improvement if applicable
-- Be constructive and encouraging`
+- Be constructive and encouraging`;
 
 export interface QuestionForEvaluation {
-  id: string
-  question_text: string
-  input_type: 'text' | 'voice' | 'multiple_choice'
-  correct_answer?: string | null
-  user_response: string
+  id: string;
+  question_text: string;
+  input_type: "text" | "voice" | "multiple_choice";
+  correct_answer?: string | null;
+  user_response: string;
 }
 
 export function buildEvaluationPrompt(
   sectionContent: string,
   sectionTitle: string,
-  questions: QuestionForEvaluation[]
+  questions: QuestionForEvaluation[],
 ): string {
   const questionsText = questions
     .map((q, i) => {
-      if (q.input_type === 'multiple_choice') {
-        const isCorrect = q.user_response === q.correct_answer
+      if (q.input_type === "multiple_choice") {
+        const isCorrect = q.user_response === q.correct_answer;
         return `Question ${i + 1} (Multiple Choice) [ID: ${q.id}]:
 Question: ${q.question_text}
 Correct Answer: ${q.correct_answer}
 Student Response: ${q.user_response}
-Pre-evaluated: ${isCorrect ? 'CORRECT' : 'INCORRECT'}`
+Pre-evaluated: ${isCorrect ? "CORRECT" : "INCORRECT"}`;
       }
-      return `Question ${i + 1} (${q.input_type === 'voice' ? 'Voice Response' : 'Text Response'}) [ID: ${q.id}]:
+      return `Question ${i + 1} (${q.input_type === "voice" ? "Voice Response" : "Text Response"}) [ID: ${q.id}]:
 Question: ${q.question_text}
-Student Response: ${q.user_response}`
+Student Response: ${q.user_response}`;
     })
-    .join('\n\n')
+    .join("\n\n");
 
   return `## Learning Context
 Section Title: ${sectionTitle}
@@ -66,5 +66,5 @@ ${questionsText}
 1. For multiple choice questions, the correctness is pre-determined - use score 100 for correct, 0 for incorrect
 2. For voice/text questions, evaluate based on the learning content above
 3. Calculate overall_score as the average of all question scores
-4. Provide brief, encouraging feedback (2-3 sentences)`
+4. Provide brief, encouraging feedback (2-3 sentences)`;
 }

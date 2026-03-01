@@ -10,14 +10,7 @@ import {
 } from "@/lib/api/client";
 import { QuizWithQuizResults } from "@/types/database";
 import clsx from "clsx";
-import {
-  ArrowRight,
-  BookOpen,
-  CheckCircle2,
-  Loader2,
-  PartyPopper,
-  ThumbsUp,
-} from "lucide-react";
+import { ArrowRight, BookOpen, CheckCircle2, Loader2, PartyPopper, ThumbsUp } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import QuestionBreakdown from "@/components/module/question-breakdown";
@@ -27,8 +20,7 @@ export default function QuizResultsPage() {
   const router = useRouter();
 
   // Data states
-  const [quizWithResults, setQuizWithResult] =
-    useState<QuizWithQuizResults | null>(null);
+  const [quizWithResults, setQuizWithResult] = useState<QuizWithQuizResults | null>(null);
   let result = null;
   if (quizWithResults?.quiz_results) {
     result = quizWithResults.quiz_results[0];
@@ -40,9 +32,7 @@ export default function QuizResultsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isNavigating, setIsNavigating] = useState(false);
 
-  const currentSectionIndex = sections.findIndex(
-    (s) => s.id === params.sectionId,
-  );
+  const currentSectionIndex = sections.findIndex((s) => s.id === params.sectionId);
   const isLastSection = currentSectionIndex === sections.length - 1;
   const nextSectionIndex = currentSectionIndex + 1;
 
@@ -60,10 +50,7 @@ export default function QuizResultsPage() {
         setQuizWithResult(quizResultsResponse.data.data as QuizWithQuizResults);
       } else if (quizResultsResponse.error) {
         // TODO: Add error handling
-        console.log(
-          "Error fetching quiz results response: ",
-          quizResultsResponse.error,
-        );
+        console.log("Error fetching quiz results response: ", quizResultsResponse.error);
       }
 
       // Fetch progress and sections
@@ -77,9 +64,7 @@ export default function QuizResultsPage() {
       }
 
       if (sectionsResult.data?.success) {
-        const sorted = [...sectionsResult.data.data].sort(
-          (a, b) => a.order_index - b.order_index,
-        );
+        const sorted = [...sectionsResult.data.data].sort((a, b) => a.order_index - b.order_index);
         setSections(sorted);
       }
 
@@ -134,10 +119,7 @@ export default function QuizResultsPage() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 p-4">
         <p className="text-gray-500 mb-4">No quiz results found</p>
-        <button
-          onClick={handleBackToModule}
-          className="text-blue-600 hover:underline"
-        >
+        <button onClick={handleBackToModule} className="text-blue-600 hover:underline">
           Back to module
         </button>
       </div>
@@ -172,24 +154,13 @@ export default function QuizResultsPage() {
         <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
           {/* Score Card */}
           <div className="bg-white rounded-xl border border-gray-200 p-6 text-center">
-            <ScoreIcon
-              className={clsx("w-12 h-12 mx-auto mb-3", scoreTier.color)}
-            />
-            <p className={clsx("text-lg font-semibold mb-4", scoreTier.color)}>
-              {scoreTier.label}
-            </p>
+            <ScoreIcon className={clsx("w-12 h-12 mx-auto mb-3", scoreTier.color)} />
+            <p className={clsx("text-lg font-semibold mb-4", scoreTier.color)}>{scoreTier.label}</p>
 
             {/* Score Circle */}
             <div className="relative w-32 h-32 mx-auto mb-4">
               <svg className="w-full h-full transform -rotate-90">
-                <circle
-                  cx="64"
-                  cy="64"
-                  r="56"
-                  fill="none"
-                  stroke="#e5e7eb"
-                  strokeWidth="12"
-                />
+                <circle cx="64" cy="64" r="56" fill="none" stroke="#e5e7eb" strokeWidth="12" />
                 <circle
                   cx="64"
                   cy="64"
@@ -202,12 +173,9 @@ export default function QuizResultsPage() {
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-3xl font-bold text-gray-900">
-                  {result.score}%
-                </span>
+                <span className="text-3xl font-bold text-gray-900">{result.score}%</span>
                 <span className="text-sm text-gray-500">
-                  {result.answers.filter((a) => a.is_correct).length}/
-                  {result.answers.length}
+                  {result.answers.filter((a) => a.is_correct).length}/{result.answers.length}
                 </span>
               </div>
             </div>
@@ -215,10 +183,7 @@ export default function QuizResultsPage() {
 
           {/* Question Breakdown */}
           {quizWithResults && (
-            <QuestionBreakdown
-              questions={quizWithResults.questions}
-              answers={result.answers}
-            />
+            <QuestionBreakdown questions={quizWithResults.questions} answers={result.answers} />
           )}
         </div>
       </main>

@@ -47,8 +47,7 @@ export const moduleGenerationSchema: ResponseFormatJSONSchema = {
         },
         topic: {
           type: "string",
-          description:
-            'The main topic category (e.g., "Programming", "Mathematics", "Science")',
+          description: 'The main topic category (e.g., "Programming", "Mathematics", "Science")',
         },
         difficulty: {
           type: "string",
@@ -74,8 +73,7 @@ export const moduleGenerationSchema: ResponseFormatJSONSchema = {
               },
               key_points: {
                 type: "array",
-                description:
-                  "One or two key points from the section that enhance memorability",
+                description: "One or two key points from the section that enhance memorability",
                 items: {
                   type: "string",
                   description: "A key point about the section",
@@ -271,8 +269,7 @@ export const quizEvaluationSchema: ResponseFormatJSONSchema = {
               },
               is_correct: {
                 type: "boolean",
-                description:
-                  "Whether the answer meets the threshold for correctness (score >= 70)",
+                description: "Whether the answer meets the threshold for correctness (score >= 70)",
               },
               feedback: {
                 type: "string",

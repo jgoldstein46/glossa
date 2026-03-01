@@ -40,14 +40,11 @@ export async function authWithEmailPassword(formData: FormData) {
     // B) Existing user, "fake success" (prevention of email enumeration).
 
     // Try to Sign In to distinguish A vs B.
-    console.log(
-      "SignUp returned no session. Attempting Sign In to check if user exists...",
-    );
-    const { data: signInData, error: signInError } =
-      await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+    console.log("SignUp returned no session. Attempting Sign In to check if user exists...");
+    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
     if (signInError) {
       // Login failed.

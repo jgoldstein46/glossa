@@ -11,11 +11,7 @@ const SupabaseContext = createContext<SupabaseClient | null>(null);
 export function SupabaseProvider({ children }: PropsWithChildren) {
   const supabase = createClient(supabaseUrl, supabaseKey);
 
-  return (
-    <SupabaseContext.Provider value={supabase}>
-      {children}
-    </SupabaseContext.Provider>
-  );
+  return <SupabaseContext.Provider value={supabase}>{children}</SupabaseContext.Provider>;
 }
 
 export default function useSupabase() {

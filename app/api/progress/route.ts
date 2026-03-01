@@ -15,10 +15,7 @@ export async function GET(request: NextRequest) {
 
     let query = supabase
       .from("user_module_progress")
-      .select(
-        "*, module:modules(id, title, topic, difficulty, thumbnail_url)",
-        { count: "exact" },
-      )
+      .select("*, module:modules(id, title, topic, difficulty, thumbnail_url)", { count: "exact" })
       .order("started_at", { ascending: false })
       .range(offset, offset + limit - 1);
 

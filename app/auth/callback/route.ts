@@ -1,24 +1,24 @@
-import { NextResponse } from 'next/server'
-import { createClient } from '@/utils/supabase/server'
-import { getRedirectPath } from '@/utils/redirect'
+import { NextResponse } from "next/server";
+import { createClient } from "@/utils/supabase/server";
+import { getRedirectPath } from "@/utils/redirect";
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url)
-  const code = searchParams.get('code')
+  const { searchParams, origin } = new URL(request.url);
+  const code = searchParams.get("code");
   // if "next" is in param, use it as the redirect URL
-  let next = searchParams.get('next')
+  let next = searchParams.get("next");
 
   if (code) {
-    const supabase = await createClient()
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    const supabase = await createClient();
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
       if (!next) {
-        next = await getRedirectPath()
+        next = await getRedirectPath();
       }
-      return NextResponse.redirect(`${origin}${next}`)
+      return NextResponse.redirect(`${origin}${next}`);
     }
   }
 
   // return the user to an error page with instructions
-  return NextResponse.redirect(`${origin}/auth/auth-code-error`)
+  return NextResponse.redirect(`${origin}/auth/auth-code-error`);
 }

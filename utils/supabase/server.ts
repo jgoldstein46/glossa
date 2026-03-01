@@ -13,9 +13,7 @@ export async function createClient() {
     // or just return null if the caller handles it.
     // Best practice: Throw a clear error AT RUNTIME when used, not at config time if possible.
     // However, createServerClient expects strings.
-    console.error(
-      "Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY",
-    );
+    console.error("Missing NEXT_PUBLIC_SUPABASE_URL or NEXT_PUBLIC_SUPABASE_ANON_KEY");
     // We'll throw here to ensure dev knows, but catching it in layout would be better.
     // Given the crash reported, let's allow it to fail but maybe adding a check in layout is better.
     // Actually, let's just make it robust by checking nulls.
@@ -33,9 +31,7 @@ export async function createClient() {
       },
       setAll(cookiesToSet) {
         try {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options),
-          );
+          cookiesToSet.forEach(({ name, value, options }) => cookieStore.set(name, value, options));
         } catch {
           // The `setAll` method was called from a Server Component.
           // This can be ignored if you have middleware refreshing

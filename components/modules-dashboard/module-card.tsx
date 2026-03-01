@@ -2,14 +2,7 @@
 
 import { Module, ProgressStatus } from "@/lib/api/client";
 import clsx from "clsx";
-import {
-  ArrowRight,
-  CheckCircle2,
-  Clock,
-  GraduationCap,
-  Play,
-  RotateCcw,
-} from "lucide-react";
+import { ArrowRight, CheckCircle2, Clock, GraduationCap, Play, RotateCcw } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -92,18 +85,14 @@ export default function ModuleCard({
       <div className="p-4 flex flex-col gap-3 flex-1">
         {/* Title */}
         <div className="flex items-start justify-between gap-2">
-          <h2 className="font-bold text-gray-900 leading-tight line-clamp-2">
-            {module.title}
-          </h2>
+          <h2 className="font-bold text-gray-900 leading-tight line-clamp-2">{module.title}</h2>
           {moduleProgressStatus === "completed" && (
             <CheckCircle2 className="w-5 h-5 text-green-600 flex-shrink-0" />
           )}
         </div>
 
         {/* Description */}
-        <p className="text-sm text-gray-600 line-clamp-2">
-          {module.description}
-        </p>
+        <p className="text-sm text-gray-600 line-clamp-2">{module.description}</p>
 
         {/* Badges */}
         <div className="flex flex-wrap gap-2">
@@ -113,9 +102,7 @@ export default function ModuleCard({
           <span
             className={clsx(
               "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium capitalize",
-              difficultyColors[
-                module.difficulty as keyof typeof difficultyColors
-              ],
+              difficultyColors[module.difficulty as keyof typeof difficultyColors],
             )}
           >
             {module.difficulty}

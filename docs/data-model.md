@@ -33,14 +33,14 @@ profiles (User)
 
 Extends Supabase Auth user with app-specific data.
 
-| Column | Type | Constraints |
-|--------|------|-------------|
-| id | uuid | PK, references auth.users(id) ON DELETE CASCADE |
-| email | text | NOT NULL |
-| display_name | text | |
-| avatar_url | text | |
-| created_at | timestamptz | DEFAULT now() |
-| updated_at | timestamptz | DEFAULT now() |
+| Column       | Type        | Constraints                                     |
+| ------------ | ----------- | ----------------------------------------------- |
+| id           | uuid        | PK, references auth.users(id) ON DELETE CASCADE |
+| email        | text        | NOT NULL                                        |
+| display_name | text        |                                                 |
+| avatar_url   | text        |                                                 |
+| created_at   | timestamptz | DEFAULT now()                                   |
+| updated_at   | timestamptz | DEFAULT now()                                   |
 
 ---
 
@@ -48,18 +48,18 @@ Extends Supabase Auth user with app-specific data.
 
 A 5-minute learning unit on a specific topic.
 
-| Column | Type | Constraints |
-|--------|------|-------------|
-| id | uuid | PK, DEFAULT gen_random_uuid() |
-| title | text | NOT NULL |
-| description | text | NOT NULL |
-| topic | text | NOT NULL |
-| difficulty | text | NOT NULL, CHECK (difficulty IN ('beginner', 'intermediate', 'advanced')) |
-| estimated_duration_mins | integer | NOT NULL, DEFAULT 5 |
-| thumbnail_url | text | |
-| is_published | boolean | DEFAULT false |
-| created_at | timestamptz | DEFAULT now() |
-| updated_at | timestamptz | DEFAULT now() |
+| Column                  | Type        | Constraints                                                              |
+| ----------------------- | ----------- | ------------------------------------------------------------------------ |
+| id                      | uuid        | PK, DEFAULT gen_random_uuid()                                            |
+| title                   | text        | NOT NULL                                                                 |
+| description             | text        | NOT NULL                                                                 |
+| topic                   | text        | NOT NULL                                                                 |
+| difficulty              | text        | NOT NULL, CHECK (difficulty IN ('beginner', 'intermediate', 'advanced')) |
+| estimated_duration_mins | integer     | NOT NULL, DEFAULT 5                                                      |
+| thumbnail_url           | text        |                                                                          |
+| is_published            | boolean     | DEFAULT false                                                            |
+| created_at              | timestamptz | DEFAULT now()                                                            |
+| updated_at              | timestamptz | DEFAULT now()                                                            |
 
 ---
 
@@ -67,17 +67,18 @@ A 5-minute learning unit on a specific topic.
 
 A part of a module containing learning content.
 
-| Column | Type | Constraints |
-|--------|------|-------------|
-| id | uuid | PK, DEFAULT gen_random_uuid() |
-| module_id | uuid | FK references modules(id) ON DELETE CASCADE |
-| title | text | NOT NULL |
-| content | text | NOT NULL |
-| order_index | integer | NOT NULL |
-| created_at | timestamptz | DEFAULT now() |
-| updated_at | timestamptz | DEFAULT now() |
+| Column      | Type        | Constraints                                 |
+| ----------- | ----------- | ------------------------------------------- |
+| id          | uuid        | PK, DEFAULT gen_random_uuid()               |
+| module_id   | uuid        | FK references modules(id) ON DELETE CASCADE |
+| title       | text        | NOT NULL                                    |
+| content     | text        | NOT NULL                                    |
+| order_index | integer     | NOT NULL                                    |
+| created_at  | timestamptz | DEFAULT now()                               |
+| updated_at  | timestamptz | DEFAULT now()                               |
 
 **Indexes:**
+
 - `(module_id, order_index)` UNIQUE
 
 ---
@@ -86,16 +87,17 @@ A part of a module containing learning content.
 
 Questions attached to a section. One quiz per section.
 
-| Column | Type | Constraints |
-|--------|------|-------------|
-| id | uuid | PK, DEFAULT gen_random_uuid() |
-| section_id | uuid | FK references sections(id) ON DELETE CASCADE, UNIQUE |
-| title | text | NOT NULL |
-| questions | jsonb | NOT NULL, DEFAULT '[]' |
-| created_at | timestamptz | DEFAULT now() |
-| updated_at | timestamptz | DEFAULT now() |
+| Column     | Type        | Constraints                                          |
+| ---------- | ----------- | ---------------------------------------------------- |
+| id         | uuid        | PK, DEFAULT gen_random_uuid()                        |
+| section_id | uuid        | FK references sections(id) ON DELETE CASCADE, UNIQUE |
+| title      | text        | NOT NULL                                             |
+| questions  | jsonb       | NOT NULL, DEFAULT '[]'                               |
+| created_at | timestamptz | DEFAULT now()                                        |
+| updated_at | timestamptz | DEFAULT now()                                        |
 
 **questions JSONB structure:**
+
 ```json
 [
   {
@@ -115,17 +117,18 @@ Questions attached to a section. One quiz per section.
 
 Stores user responses and scores.
 
-| Column | Type | Constraints |
-|--------|------|-------------|
-| id | uuid | PK, DEFAULT gen_random_uuid() |
-| user_id | uuid | FK references profiles(id) ON DELETE CASCADE |
-| quiz_id | uuid | FK references quizzes(id) ON DELETE CASCADE |
-| score | integer | NOT NULL, CHECK (score >= 0 AND score <= 100) |
-| answers | jsonb | NOT NULL, DEFAULT '[]' |
-| completed_at | timestamptz | NOT NULL |
-| created_at | timestamptz | DEFAULT now() |
+| Column       | Type        | Constraints                                   |
+| ------------ | ----------- | --------------------------------------------- |
+| id           | uuid        | PK, DEFAULT gen_random_uuid()                 |
+| user_id      | uuid        | FK references profiles(id) ON DELETE CASCADE  |
+| quiz_id      | uuid        | FK references quizzes(id) ON DELETE CASCADE   |
+| score        | integer     | NOT NULL, CHECK (score >= 0 AND score <= 100) |
+| answers      | jsonb       | NOT NULL, DEFAULT '[]'                        |
+| completed_at | timestamptz | NOT NULL                                      |
+| created_at   | timestamptz | DEFAULT now()                                 |
 
 **answers JSONB structure:**
+
 ```json
 [
   {
@@ -137,6 +140,7 @@ Stores user responses and scores.
 ```
 
 **Indexes:**
+
 - `(user_id, quiz_id)` for lookup
 
 ---
@@ -145,17 +149,18 @@ Stores user responses and scores.
 
 Tracks which modules a user has started/completed.
 
-| Column | Type | Constraints |
-|--------|------|-------------|
-| id | uuid | PK, DEFAULT gen_random_uuid() |
-| user_id | uuid | FK references profiles(id) ON DELETE CASCADE |
-| module_id | uuid | FK references modules(id) ON DELETE CASCADE |
-| status | text | NOT NULL, CHECK (status IN ('in_progress', 'completed')) |
-| current_section_index | integer | NOT NULL, DEFAULT 0 |
-| started_at | timestamptz | DEFAULT now() |
-| completed_at | timestamptz | |
+| Column                | Type        | Constraints                                              |
+| --------------------- | ----------- | -------------------------------------------------------- |
+| id                    | uuid        | PK, DEFAULT gen_random_uuid()                            |
+| user_id               | uuid        | FK references profiles(id) ON DELETE CASCADE             |
+| module_id             | uuid        | FK references modules(id) ON DELETE CASCADE              |
+| status                | text        | NOT NULL, CHECK (status IN ('in_progress', 'completed')) |
+| current_section_index | integer     | NOT NULL, DEFAULT 0                                      |
+| started_at            | timestamptz | DEFAULT now()                                            |
+| completed_at          | timestamptz |                                                          |
 
 **Indexes:**
+
 - `(user_id, module_id)` UNIQUE
 
 ---

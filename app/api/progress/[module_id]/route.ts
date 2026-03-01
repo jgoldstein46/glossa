@@ -48,11 +48,7 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
       return apiError("Progress record not found", 404);
     }
 
-    const allowedFields = [
-      "status",
-      "current_section_index",
-      "completed_at",
-    ] as const;
+    const allowedFields = ["status", "current_section_index", "completed_at"] as const;
     const updateData: Record<string, unknown> = {};
     for (const field of allowedFields) {
       if (field in body) {
@@ -68,17 +64,11 @@ export async function PATCH(request: NextRequest, { params }: RouteParams) {
     if (updateData.status) {
       const validStatuses = ["in_progress", "completed"];
       if (!validStatuses.includes(updateData.status as string)) {
-        return apiError(
-          "Invalid status. Must be: in_progress or completed",
-          400,
-        );
+        return apiError("Invalid status. Must be: in_progress or completed", 400);
       }
 
       // Auto-set completed_at when marking as completed
-      if (
-        (updateData.status as string) === "completed" &&
-        !updateData.completed_at
-      ) {
+      if ((updateData.status as string) === "completed" && !updateData.completed_at) {
         updateData.completed_at = new Date().toISOString();
       }
     }

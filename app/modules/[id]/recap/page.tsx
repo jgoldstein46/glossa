@@ -13,12 +13,8 @@ export default function Page() {
   const params = useParams();
   const router = useRouter();
   const moduleId: string | undefined = params.id as string;
-  const [quizzesWithResults, setQuizzesWithResults] = useState<
-    QuizWithQuizResults[] | null
-  >(null);
-  const [expandedQuizzes, setExpandedQuizzes] = useState<Set<string>>(
-    new Set(),
-  );
+  const [quizzesWithResults, setQuizzesWithResults] = useState<QuizWithQuizResults[] | null>(null);
+  const [expandedQuizzes, setExpandedQuizzes] = useState<Set<string>>(new Set());
   const { sections, module } = useModule();
 
   useEffect(() => {
@@ -67,18 +63,11 @@ export default function Page() {
         <div className="max-w-2xl mx-auto px-4 py-6 space-y-8">
           {/* What We Learned Section */}
           <section className="space-y-4">
-            <h2 className="text-2xl font-bold text-gray-900">
-              What We Learned
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-900">What We Learned</h2>
 
             {sections.map((section) => (
-              <div
-                key={section.id}
-                className="bg-white rounded-xl border border-gray-200 p-6"
-              >
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                  {section.title}
-                </h3>
+              <div key={section.id} className="bg-white rounded-xl border border-gray-200 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">{section.title}</h3>
                 <ul className="space-y-2">
                   {(section.key_points || []).map((point, index) => (
                     <li key={index} className="flex items-start gap-2">
@@ -98,17 +87,12 @@ export default function Page() {
 
               {sections.map((section) => {
                 // Find the quiz for this section
-                const quizWithResults = quizzesWithResults.find(
-                  (q) => q.section_id === section.id,
-                );
+                const quizWithResults = quizzesWithResults.find((q) => q.section_id === section.id);
 
-                if (!quizWithResults || !quizWithResults.quiz_results[0])
-                  return null;
+                if (!quizWithResults || !quizWithResults.quiz_results[0]) return null;
 
                 const result = quizWithResults.quiz_results[0];
-                const correctCount = result.answers.filter(
-                  (a) => a.is_correct,
-                ).length;
+                const correctCount = result.answers.filter((a) => a.is_correct).length;
                 const totalCount = result.answers.length;
                 const isExpanded = expandedQuizzes.has(quizWithResults.id);
 
@@ -127,8 +111,7 @@ export default function Page() {
                           {section.title}
                         </h3>
                         <p className="text-sm text-gray-600">
-                          Score: {correctCount}/{totalCount} correct (
-                          {result.score}%)
+                          Score: {correctCount}/{totalCount} correct ({result.score}%)
                         </p>
                       </div>
                       <div className="ml-4 text-gray-400">

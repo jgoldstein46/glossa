@@ -16,18 +16,10 @@ import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 
 // Voice input component using ElevenLabs Scribe
-function VoiceInput({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-}) {
+function VoiceInput({ value, onChange }: { value: string; onChange: (value: string) => void }) {
   const [showTextFallback, setShowTextFallback] = useState(false);
 
-  const [pendingCommittedText, setPendingCommittedText] = useState<
-    string | null
-  >(null);
+  const [pendingCommittedText, setPendingCommittedText] = useState<string | null>(null);
 
   const scribe = useScribe({
     modelId: "scribe_v2_realtime",
@@ -40,9 +32,7 @@ function VoiceInput({
   useEffect(() => {
     if (!pendingCommittedText) return;
 
-    const newValue = value
-      ? `${value} ${pendingCommittedText}`
-      : pendingCommittedText;
+    const newValue = value ? `${value} ${pendingCommittedText}` : pendingCommittedText;
     onChange(newValue);
     setPendingCommittedText(null);
   }, [pendingCommittedText, onChange, value]);
@@ -93,30 +83,20 @@ function VoiceInput({
           onClick={handleToggleRecording}
           className={clsx(
             "w-20 h-20 rounded-full flex items-center justify-center transition-all",
-            scribe.isConnected
-              ? "bg-red-500 animate-pulse"
-              : "bg-blue-600 hover:bg-blue-700",
+            scribe.isConnected ? "bg-red-500 animate-pulse" : "bg-blue-600 hover:bg-blue-700",
             "text-white",
           )}
         >
-          {scribe.isConnected ? (
-            <Square className="w-8 h-8" />
-          ) : (
-            <Mic className="w-8 h-8" />
-          )}
+          {scribe.isConnected ? <Square className="w-8 h-8" /> : <Mic className="w-8 h-8" />}
         </button>
 
         <p className="text-sm text-gray-600">
-          {scribe.isConnected
-            ? "Recording... tap to stop"
-            : "Tap to start speaking"}
+          {scribe.isConnected ? "Recording... tap to stop" : "Tap to start speaking"}
         </p>
 
         {/* Live transcript */}
         {scribe.partialTranscript && (
-          <p className="text-gray-500 italic text-sm">
-            {scribe.partialTranscript}
-          </p>
+          <p className="text-gray-500 italic text-sm">{scribe.partialTranscript}</p>
         )}
       </div>
 
@@ -165,9 +145,7 @@ function MultipleChoiceInput({
           <div
             className={clsx(
               "w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0",
-              value === option
-                ? "border-blue-600 bg-blue-600"
-                : "border-gray-300",
+              value === option ? "border-blue-600 bg-blue-600" : "border-gray-300",
             )}
           >
             {value === option && <Check className="w-3 h-3 text-white" />}
@@ -180,13 +158,7 @@ function MultipleChoiceInput({
 }
 
 // Text input component
-function TextInput({
-  value,
-  onChange,
-}: {
-  value: string;
-  onChange: (value: string) => void;
-}) {
+function TextInput({ value, onChange }: { value: string; onChange: (value: string) => void }) {
   return (
     <textarea
       value={value}
@@ -215,9 +187,7 @@ export default function QuizPage() {
   const currentQuestion = quiz?.questions[currentQuestionIndex];
   const currentQuestionId = currentQuestion?.id || 0;
   const totalQuestions = quiz?.questions.length || 0;
-  const currentAnswer = currentQuestionId
-    ? answers[currentQuestionId] || ""
-    : "";
+  const currentAnswer = currentQuestionId ? answers[currentQuestionId] || "" : "";
   const isLastQuestion = currentQuestionIndex === totalQuestions - 1;
   const canProceed = currentAnswer.trim().length > 0;
 
@@ -226,9 +196,7 @@ export default function QuizPage() {
     async function loadQuiz() {
       setIsLoading(true);
 
-      const [quizResult] = await Promise.all([
-        getSectionQuiz({ path: { id: params.sectionId } }),
-      ]);
+      const [quizResult] = await Promise.all([getSectionQuiz({ path: { id: params.sectionId } })]);
 
       if (quizResult.data?.success) {
         const quizData = quizResult.data.data;
@@ -264,12 +232,10 @@ export default function QuizPage() {
       // Submit quiz
       setIsSubmitting(true);
 
-      const answerInputs: QuizEvaluationAnswerInput[] = quiz.questions.map(
-        (q) => ({
-          question_id: q.id,
-          user_response: answers[q.id] || "",
-        }),
-      );
+      const answerInputs: QuizEvaluationAnswerInput[] = quiz.questions.map((q) => ({
+        question_id: q.id,
+        user_response: answers[q.id] || "",
+      }));
 
       const result = await evaluateQuiz({
         body: {
@@ -358,18 +324,13 @@ export default function QuizPage() {
         <div className="max-w-2xl mx-auto px-4 py-6 space-y-6">
           {/* Question */}
           <div className="space-y-2">
-            <p className="text-sm font-medium text-blue-600">
-              Question {currentQuestionIndex + 1}
-            </p>
-            <h2 className="text-xl font-bold text-gray-900">
-              {currentQuestion.question_text}
-            </h2>
+            <p className="text-sm font-medium text-blue-600">Question {currentQuestionIndex + 1}</p>
+            <h2 className="text-xl font-bold text-gray-900">{currentQuestion.question_text}</h2>
           </div>
 
           {/* Answer input based on type */}
           <div className="pt-4">
-            {currentQuestion.input_type === "multiple_choice" &&
-            currentQuestion.options ? (
+            {currentQuestion.input_type === "multiple_choice" && currentQuestion.options ? (
               <MultipleChoiceInput
                 options={currentQuestion.options}
                 value={currentAnswer}

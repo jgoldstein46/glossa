@@ -29,24 +29,14 @@
               {
                 "question_text": "Which phrase is the standard Persian greeting for hello?",
                 "input_type": "multiple_choice",
-                "options": [
-                  "سلام",
-                  "خداحافظ",
-                  "صبح بخیر",
-                  "شب بخیر"
-                ],
+                "options": ["سلام", "خداحافظ", "صبح بخیر", "شب بخیر"],
                 "correct_answer": "سلام",
                 "order_index": 1
               },
               {
                 "question_text": "Which is a common morning greeting in Persian?",
                 "input_type": "multiple_choice",
-                "options": [
-                  "صبح بخیر",
-                  "سلام",
-                  "شب بخیر",
-                  "روز بخیر"
-                ],
+                "options": ["صبح بخیر", "سلام", "شب بخیر", "روز بخیر"],
                 "correct_answer": "صبح بخیر",
                 "order_index": 2
               }
@@ -70,12 +60,7 @@
               {
                 "question_text": "Which phrase is a formal way to ask 'How are you?'",
                 "input_type": "multiple_choice",
-                "options": [
-                  "حال شما چطور است؟",
-                  "چطوری؟",
-                  "چی خبر؟",
-                  "کجایی؟"
-                ],
+                "options": ["حال شما چطور است؟", "چطوری؟", "چی خبر؟", "کجایی؟"],
                 "correct_answer": "حال شما چطور است؟",
                 "order_index": 1
               },
@@ -111,24 +96,14 @@
               {
                 "question_text": "Which phrase means goodbye in Persian?",
                 "input_type": "multiple_choice",
-                "options": [
-                  "خداحافظ",
-                  "سلام",
-                  "صبح بخیر",
-                  "شب بخیر"
-                ],
+                "options": ["خداحافظ", "سلام", "صبح بخیر", "شب بخیر"],
                 "correct_answer": "خداحافظ",
                 "order_index": 1
               },
               {
                 "question_text": "What is a natural response to someone thanking you?",
                 "input_type": "multiple_choice",
-                "options": [
-                  "خواهش می‌کنم",
-                  "متشکرم",
-                  "سلام",
-                  "خداحافظ"
-                ],
+                "options": ["خواهش می‌کنم", "متشکرم", "سلام", "خداحافظ"],
                 "correct_answer": "خواهش می‌کنم",
                 "order_index": 2
               }
@@ -152,12 +127,7 @@
               {
                 "question_text": "Which letter starts the word السلام with an s sound?",
                 "input_type": "multiple_choice",
-                "options": [
-                  "س",
-                  "ش",
-                  "ل",
-                  "ا"
-                ],
+                "options": ["س", "ش", "ل", "ا"],
                 "correct_answer": "س",
                 "order_index": 1
               },
@@ -291,12 +261,7 @@
               {
                 "question_text": "Which item is NOT typically found on an ofrenda?",
                 "input_type": "multiple_choice",
-                "options": [
-                  "Photos",
-                  "Fireworks",
-                  "Water",
-                  "Pan de muerto"
-                ],
+                "options": ["Photos", "Fireworks", "Water", "Pan de muerto"],
                 "correct_answer": "Fireworks",
                 "order_index": 1
               },
@@ -332,24 +297,14 @@
               {
                 "question_text": "What is La Catrina best known for?",
                 "input_type": "multiple_choice",
-                "options": [
-                  "A saint",
-                  "A satirical figure of death",
-                  "A food dish",
-                  "A dance"
-                ],
+                "options": ["A saint", "A satirical figure of death", "A food dish", "A dance"],
                 "correct_answer": "A satirical figure of death",
                 "order_index": 1
               },
               {
                 "question_text": "Which element best shows death as part of life in section 3?",
                 "input_type": "multiple_choice",
-                "options": [
-                  "Marigolds",
-                  "Pan de muerto",
-                  "Sugar skulls",
-                  "Candles"
-                ],
+                "options": ["Marigolds", "Pan de muerto", "Sugar skulls", "Candles"],
                 "correct_answer": "Sugar skulls",
                 "order_index": 2
               }
@@ -373,24 +328,14 @@
               {
                 "question_text": "Which item is least associated with an ofrenda?",
                 "input_type": "multiple_choice",
-                "options": [
-                  "Photos",
-                  "Pan de muerto",
-                  "Water",
-                  "Fireworks"
-                ],
+                "options": ["Photos", "Pan de muerto", "Water", "Fireworks"],
                 "correct_answer": "Fireworks",
                 "order_index": 1
               },
               {
                 "question_text": "Which element best demonstrates the memory-sharing idea from sections 2–3?",
                 "input_type": "multiple_choice",
-                "options": [
-                  "Photos on an altar",
-                  "Radio broadcasts",
-                  "Neon lights",
-                  "Gas stoves"
-                ],
+                "options": ["Photos on an altar", "Radio broadcasts", "Neon lights", "Gas stoves"],
                 "correct_answer": "Photos on an altar",
                 "order_index": 2
               }
@@ -414,12 +359,7 @@
               {
                 "question_text": "Which element is least associated with Dia de los Muertos?",
                 "input_type": "multiple_choice",
-                "options": [
-                  "Marigolds",
-                  "Sugar skulls",
-                  "Ghost hunting",
-                  "Pan de muerto"
-                ],
+                "options": ["Marigolds", "Sugar skulls", "Ghost hunting", "Pan de muerto"],
                 "correct_answer": "Ghost hunting",
                 "order_index": 1
               },
