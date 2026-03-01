@@ -1,0 +1,1 @@
+ALTER TABLE modules ADD COLUMN is_public DEFAULT = FALSE;
