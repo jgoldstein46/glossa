@@ -12,10 +12,28 @@ Glossa is an AI-powered language learning platform built with Next.js 16 (App Ro
 pnpm run dev          # Start dev server (localhost:3000)
 pnpm run build        # Production build
 pnpm run lint         # ESLint
+pnpm run test         # Run tests once (vitest run)
+pnpm run test:watch   # Run tests in watch mode (vitest)
 pnpm run format       # Format all files with Prettier
 pnpm run format:check # Check formatting without writing
 pnpm run generate:api # Regenerate OpenAPI client types from openapi.yaml → lib/api/client/
 ```
+
+## Validation
+
+After making changes, run these steps to verify correctness:
+
+1. `pnpm run test` — All unit tests must pass
+2. `pnpm run build` — No TypeScript errors
+3. `pnpm run format` — Consistent formatting
+
+## Testing
+
+- **Framework:** Vitest (config in `vitest.config.mts`, globals enabled)
+- **Test location:** Co-located `__tests__/` directories next to source (e.g., `lib/services/__tests__/`)
+- **Running tests:** `pnpm run test` (single run) or `pnpm run test:watch` (watch mode)
+- When adding or modifying service logic, add or update corresponding tests
+- Mock external dependencies (OpenAI, Supabase, ElevenLabs) — never call real APIs in tests
 
 ## Code Style
 

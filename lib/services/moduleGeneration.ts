@@ -8,6 +8,11 @@ import {
   updateSectionsWithAudioUrls,
 } from "@/lib/services/audioGeneration";
 import { createSupabaseServerClient } from "../supabase/server";
+import type { GenerationState } from "@/types/database";
+
+type ServiceResult<T> =
+  | { success: true; data: T }
+  | { success: false; error: string; details?: string };
 
 interface GenerationSuccess {
   success: true;
@@ -54,11 +59,16 @@ async function generateModuleContent(title: string, language: string): Promise<G
 async function updateGenerationStatus(
   supabase: SupabaseClient,
   moduleId: string,
-  state: string,
+  state: GenerationState,
   errorMessage?: string,
   errorDetails?: string,
 ) {
-  const update: any = {
+  const update: {
+    state: GenerationState;
+    error_message: string | null;
+    error_details: string | null;
+    completed_at?: string;
+  } = {
     state,
     error_message: errorMessage || null,
     error_details: errorDetails || null,
@@ -82,7 +92,7 @@ async function insertUserModuleProgress(
   supabase: SupabaseClient,
   moduleId: string,
   creatorId: string | null,
-) {
+): Promise<ServiceResult<void>> {
   const { data: existingUserModuleProgress } = await supabase
     .from("user_module_progress")
     .select("id")
@@ -91,24 +101,24 @@ async function insertUserModuleProgress(
     .single();
 
   if (!existingUserModuleProgress) {
-    const { error: userModuleProgressInsertionError } = await supabase
-      .from("user_module_progress")
-      .insert({
-        module_id: moduleId,
-        user_id: creatorId,
-        status: "in_progress",
-        current_section_index: 0,
-      });
+    const { error } = await supabase.from("user_module_progress").insert({
+      module_id: moduleId,
+      user_id: creatorId,
+      status: "in_progress",
+      current_section_index: 0,
+    });
 
-    if (userModuleProgressInsertionError) {
-      console.log("Got error inserting user module progress: ", userModuleProgressInsertionError);
+    if (error) {
+      console.log("Got error inserting user module progress: ", error);
       return {
         success: false,
-        error: userModuleProgressInsertionError.message,
-        details: userModuleProgressInsertionError.details,
+        error: error.message,
+        details: error.details,
       };
     }
   }
+
+  return { success: true, data: undefined };
 }
 
 async function insertInitialRecords(
@@ -119,29 +129,31 @@ async function insertInitialRecords(
     moduleId: string;
     creatorId: string | null;
   },
-) {
+): Promise<ServiceResult<void>> {
   const { title, language, moduleId, creatorId } = config;
 
-  const moduleError = await insertModule(supabase, {
+  const moduleResult = await insertModule(supabase, {
     moduleId,
     creatorId,
     title,
     language,
   });
-  if (moduleError) return moduleError;
+  if (!moduleResult.success) return moduleResult;
 
-  const moduleGenerationStatusError = insertModuleGenerationStatus(supabase, moduleId);
-  if (moduleGenerationStatusError) return moduleGenerationStatusError;
+  const statusResult = await insertModuleGenerationStatus(supabase, moduleId);
+  if (!statusResult.success) return statusResult;
 
-  const insertUserModuleProgressError = await insertUserModuleProgress(
-    supabase,
-    moduleId,
-    creatorId,
-  );
-  if (insertUserModuleProgressError) return insertUserModuleProgressError;
+  const progressResult = await insertUserModuleProgress(supabase, moduleId, creatorId);
+  if (!progressResult.success) return progressResult;
+
+  return { success: true, data: undefined };
 }
 
-async function updateModule(supabase: SupabaseClient, generated, moduleId: string) {
+async function updateModule(
+  supabase: SupabaseClient,
+  generated: GeneratedModule,
+  moduleId: string,
+): Promise<ServiceResult<{ module: Module }>> {
   const { data, error } = await supabase
     .from("modules")
     .update({
@@ -155,7 +167,7 @@ async function updateModule(supabase: SupabaseClient, generated, moduleId: strin
     .single();
 
   if (error || !data) {
-    console.log("Got error while trying to update module in DB:", moduleError);
+    console.log("Got error while trying to update module in DB:", error);
     const errorMessage = "Failed to update module in database";
     await updateGenerationStatus(
       supabase,
@@ -170,49 +182,53 @@ async function updateModule(supabase: SupabaseClient, generated, moduleId: strin
       details: error?.message,
     };
   }
+
+  return { success: true, data: { module: data } };
 }
 
-async function insertSectionsAndQuizzes(supabase, generated) {
-  const sections: Section[] = [];
-  const quizzes: Quiz[] = [];
+async function insertSectionsAndQuizzes(
+  supabase: SupabaseClient,
+  generated: GeneratedModule,
+  moduleId: string,
+): Promise<ServiceResult<{ sections: Section[]; quizzes: Quiz[] }>> {
+  console.log("Inserting sections for module with ID:", moduleId);
 
-  console.log("Inserting sections for module with ID:", module.id);
+  // Pre-generate UUIDs and build all section rows
+  const sectionRows = generated.sections.map((sectionData) => ({
+    id: crypto.randomUUID(),
+    module_id: moduleId,
+    title: sectionData.title,
+    content: sectionData.content,
+    key_points: sectionData.key_points,
+    order_index: sectionData.order_index,
+  }));
 
-  for (const sectionData of generated.sections) {
-    // Create section
-    const { data: section, error: sectionError } = await supabase
-      .from("sections")
-      .insert({
-        module_id: module.id,
-        title: sectionData.title,
-        content: sectionData.content,
-        key_points: sectionData.key_points,
-        order_index: sectionData.order_index,
-      })
-      .select()
-      .single();
+  // Batch insert all sections
+  const { data: sections, error: sectionError } = await supabase
+    .from("sections")
+    .insert(sectionRows)
+    .select();
 
-    if (sectionError || !section) {
-      // Cleanup: delete module on failure (cascade will handle sections)
-      await supabase.from("modules").delete().eq("id", module.id);
-      const errorMessage = "Failed to create section";
-      await updateGenerationStatus(
-        supabase,
-        moduleId,
-        "content_generation_error",
-        errorMessage,
-        sectionError?.message,
-      );
-      return {
-        success: false,
-        error: errorMessage,
-        details: sectionError?.message,
-      };
-    }
+  if (sectionError || !sections) {
+    await supabase.from("modules").delete().eq("id", moduleId);
+    const errorMessage = "Failed to create sections";
+    await updateGenerationStatus(
+      supabase,
+      moduleId,
+      "content_generation_error",
+      errorMessage,
+      sectionError?.message,
+    );
+    return {
+      success: false,
+      error: errorMessage,
+      details: sectionError?.message,
+    };
+  }
 
-    sections.push(section);
-    console.log("Inserting questions for section: ", section.id);
-    // Create quiz for section
+  // Build all quiz rows, mapping each to its section via the pre-generated IDs
+  const quizRows = generated.sections.map((sectionData, index) => {
+    const sectionId = sectionRows[index].id;
     const questionsWithIds: QuizQuestion[] = sectionData.quiz.questions.map((q) => ({
       id: crypto.randomUUID(),
       question_text: q.question_text,
@@ -222,36 +238,37 @@ async function insertSectionsAndQuizzes(supabase, generated) {
       order_index: q.order_index,
     }));
 
-    const { data: quiz, error: quizError } = await supabase
-      .from("quizzes")
-      .insert({
-        section_id: section.id,
-        title: sectionData.quiz.title,
-        questions: questionsWithIds,
-      })
-      .select()
-      .single();
+    return {
+      section_id: sectionId,
+      title: sectionData.quiz.title,
+      questions: questionsWithIds,
+    };
+  });
 
-    if (quizError || !quiz) {
-      // Cleanup: delete module on failure (cascade will handle sections/quizzes)
-      await supabase.from("modules").delete().eq("id", module.id);
-      const errorMessage = "Failed to create quiz";
-      await updateGenerationStatus(
-        supabase,
-        moduleId,
-        "content_generation_error",
-        errorMessage,
-        quizError?.message,
-      );
-      return {
-        success: false,
-        error: errorMessage,
-        details: quizError?.message,
-      };
-    }
+  // Batch insert all quizzes
+  const { data: quizzes, error: quizError } = await supabase
+    .from("quizzes")
+    .insert(quizRows)
+    .select();
 
-    quizzes.push(quiz);
+  if (quizError || !quizzes) {
+    await supabase.from("modules").delete().eq("id", moduleId);
+    const errorMessage = "Failed to create quizzes";
+    await updateGenerationStatus(
+      supabase,
+      moduleId,
+      "content_generation_error",
+      errorMessage,
+      quizError?.message,
+    );
+    return {
+      success: false,
+      error: errorMessage,
+      details: quizError?.message,
+    };
   }
+
+  return { success: true, data: { sections, quizzes } };
 }
 
 export async function generateModule(
@@ -276,26 +293,31 @@ export async function generateModule(
   console.log("Generating module with moduleId and creatorId", moduleId, creatorId);
 
   try {
-    const initialRecordInsertionError = await insertInitialRecords(supabase, {
+    const initialResult = await insertInitialRecords(supabase, {
       title,
       language,
       moduleId,
       creatorId,
     });
-    if (initialRecordInsertionError) return initialRecordInsertionError;
+    if (!initialResult.success) return initialResult;
 
     // Step 1: Generate content via LLM
-    let generated;
+    let generated: GeneratedModule;
     try {
       generated = await generateModuleContent(title, language);
     } catch (error) {
       return await handleModuleGenerationError(error, supabase, moduleId);
     }
 
-    const udpateModuleError = await updateModule(supabase, generated, moduleId);
-    if (udpateModuleError) return udpateModuleError;
+    // Step 2: Update module with generated metadata
+    const updateResult = await updateModule(supabase, generated, moduleId);
+    if (!updateResult.success) return updateResult;
+    const { module } = updateResult.data;
 
     // Step 3: Create sections and quizzes
+    const sectionsResult = await insertSectionsAndQuizzes(supabase, generated, moduleId);
+    if (!sectionsResult.success) return sectionsResult;
+    const { sections, quizzes } = sectionsResult.data;
 
     // Step 4: Update status to generating_audio
     await updateGenerationStatus(supabase, moduleId, "generating_audio");
@@ -310,7 +332,7 @@ export async function generateModule(
       console.log("Generating audio for sections");
       const audioResults = await generateAudioForSections(
         supabase,
-        module.id,
+        moduleId,
         sectionsForAudio,
         language,
       );
@@ -322,7 +344,7 @@ export async function generateModule(
       const { data: updatedSections } = await supabase
         .from("sections")
         .select("*")
-        .eq("module_id", module.id)
+        .eq("module_id", moduleId)
         .order("order_index");
 
       if (updatedSections) {
@@ -386,7 +408,7 @@ async function handleModuleGenerationError(
 async function insertModuleGenerationStatus(
   supabase: SupabaseClient,
   moduleId: string,
-): Promise<{ success: false; error: string; details: string } | undefined> {
+): Promise<ServiceResult<void>> {
   const { data, error } = await supabase
     .from("module_generation_status")
     .insert({
@@ -409,6 +431,8 @@ async function insertModuleGenerationStatus(
       details: error.details,
     };
   }
+
+  return { success: true, data: undefined };
 }
 
 async function insertModule(
@@ -419,7 +443,7 @@ async function insertModule(
     title: string;
     language: string;
   },
-) {
+): Promise<ServiceResult<void>> {
   const { moduleId, creatorId, title, language } = moduleConfig;
 
   const { error } = await supabase
@@ -444,6 +468,8 @@ async function insertModule(
       error: error.message,
       details: error.details,
     };
+
+  return { success: true, data: undefined };
 }
 
 export async function regenerateModuleAudio(
