@@ -1,6 +1,7 @@
 import { NextRequest } from "next/server";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { apiSuccess, apiError } from "@/lib/api/response";
+import { requireAuth } from "@/lib/api/auth";
 
 type RouteParams = { params: Promise<{ id: string }> };
 
@@ -25,7 +26,15 @@ export async function GET(request: NextRequest, { params }: RouteParams) {
 // PATCH /api/profiles/[id] - Update profile
 export async function PATCH(request: NextRequest, { params }: RouteParams) {
   try {
+    const { user, error: authError } = await requireAuth();
+    if (authError) return authError;
+
     const { id } = await params;
+
+    if (user.id !== id) {
+      return apiError("You can only update your own profile", 403);
+    }
+
     const supabase = await createSupabaseServerClient();
     const body = await request.json();
 
