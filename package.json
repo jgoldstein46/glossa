@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "generate:api": "openapi-ts"
   },
   "dependencies": {
@@ -14,6 +16,8 @@
     "@elevenlabs/react": "^0.12.1",
     "@flowglad/nextjs": "^0.15.1",
     "@hey-api/client-fetch": "^0.13.1",
+    "@radix-ui/react-dialog": "^1.1.15",
+    "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-slot": "^1.2.4",
     "@supabase/ssr": "^0.8.0",
     "@supabase/supabase-js": "^2.87.1",
@@ -36,6 +40,8 @@
     "dotenv": "^17.2.3",
     "eslint": "^9",
     "eslint-config-next": "16.0.10",
+    "eslint-config-prettier": "^10.1.8",
+    "prettier": "^3.8.1",
     "shadcn": "^3.6.1",
     "tailwindcss": "^4",
     "tsx": "^4.21.0",
