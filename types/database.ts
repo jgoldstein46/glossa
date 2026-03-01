@@ -18,6 +18,8 @@ export interface Profile {
 
 export interface Module {
   id: string;
+  creator_id: string | null;
+  is_public: boolean;
   title: string;
   description: string;
   topic: string;
@@ -71,6 +73,17 @@ export interface UserModuleProgress {
   completed_at: string | null;
 }
 
+export interface ModuleGenerationStatus {
+  id: string;
+  module_id: string;
+  state: GenerationState;
+  error_message: string | null;
+  error_details: string | null;
+  started_at: string;
+  completed_at: string | null;
+  updated_at: string;
+}
+
 // ============================================
 // Nested Types (JSONB)
 // ============================================
@@ -101,6 +114,13 @@ export type QuestionInputType = "text" | "voice" | "multiple_choice";
 
 export type ProgressStatus = "in_progress" | "completed";
 
+export type GenerationState =
+  | "generating_content"
+  | "generating_audio"
+  | "completed"
+  | "content_generation_error"
+  | "audio_generation_error";
+
 // ============================================
 // Insert Types (for creating new records)
 // ============================================
@@ -115,33 +135,31 @@ export type QuizInsert = Omit<Quiz, "id" | "created_at" | "updated_at">;
 
 export type QuizResultInsert = Omit<QuizResult, "id" | "created_at">;
 
-export type UserModuleProgressInsert = Omit<
-  UserModuleProgress,
-  "id" | "started_at"
+export type UserModuleProgressInsert = Omit<UserModuleProgress, "id" | "started_at">;
+
+export type ModuleGenerationStatusInsert = Omit<
+  ModuleGenerationStatus,
+  "id" | "started_at" | "updated_at"
 >;
 
 // ============================================
 // Update Types (for partial updates)
 // ============================================
 
-export type ProfileUpdate = Partial<
-  Omit<Profile, "id" | "created_at" | "updated_at">
->;
+export type ProfileUpdate = Partial<Omit<Profile, "id" | "created_at" | "updated_at">>;
 
-export type ModuleUpdate = Partial<
-  Omit<Module, "id" | "created_at" | "updated_at">
->;
+export type ModuleUpdate = Partial<Omit<Module, "id" | "created_at" | "updated_at">>;
 
-export type SectionUpdate = Partial<
-  Omit<Section, "id" | "created_at" | "updated_at">
->;
+export type SectionUpdate = Partial<Omit<Section, "id" | "created_at" | "updated_at">>;
 
-export type QuizUpdate = Partial<
-  Omit<Quiz, "id" | "created_at" | "updated_at">
->;
+export type QuizUpdate = Partial<Omit<Quiz, "id" | "created_at" | "updated_at">>;
 
 export type UserModuleProgressUpdate = Partial<
   Omit<UserModuleProgress, "id" | "user_id" | "module_id" | "started_at">
+>;
+
+export type ModuleGenerationStatusUpdate = Partial<
+  Omit<ModuleGenerationStatus, "id" | "module_id" | "started_at" | "updated_at">
 >;
 
 // ============================================
@@ -205,6 +223,11 @@ export type Database = {
         Insert: UserModuleProgressInsert;
         Update: UserModuleProgressUpdate;
       };
+      module_generation_status: {
+        Row: ModuleGenerationStatus;
+        Insert: ModuleGenerationStatusInsert;
+        Update: ModuleGenerationStatusUpdate;
+      };
     };
     Views: Record<string, never>;
     Functions: Record<string, never>;
@@ -212,6 +235,7 @@ export type Database = {
       difficulty: Difficulty;
       question_input_type: QuestionInputType;
       progress_status: ProgressStatus;
+      generation_state: GenerationState;
     };
   };
 };

@@ -23,6 +23,8 @@ export type Profile = {
 
 export type Module = {
   id: string;
+  creator_id?: string;
+  is_public: boolean;
   title: string;
   description: string;
   topic: string;
